@@ -49,7 +49,7 @@ export function getTransferBuffers(usbCommand: UsbCommand, configBuffer: Buffer)
  */
 export function getTransferData(buffer: Buffer): number[] {
     const data = convertBufferToIntArray(buffer);
-    data.unshift(0);
+    data.unshift(4);
 
     return data;
 }

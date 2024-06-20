@@ -188,9 +188,9 @@ export class UhkHidDevice {
                 const logString = bufferToString(receivedData);
                 this.logService.usb('[UhkHidDevice] USB[R]:', logString);
 
-                if (receivedData[0] !== 0) {
-                    return reject(new Error(`Communications error with UHK. Response code: ${receivedData[0]}`));
-                }
+                // if (receivedData[0] !== 0) {
+                //     return reject(new Error(`Communications error with UHK. Response code: ${receivedData[0]}`));
+                // }
 
                 return resolve(Buffer.from(receivedData));
             } catch (err) {
