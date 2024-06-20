@@ -181,18 +181,24 @@ export class UhkHidDevice {
 
             try {
                 const sendData = getTransferData(buffer);
-                this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(sendData).substr(3));
-                device.write(sendData);
+                this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(sendData));
+                device.on('error', (err) => {
+                    console.log('error', err);
+                });
+                device.on('data', (data) => {
+                    console.log('data', data);
+                });
+                await device.write(sendData);
                 await snooze(1);
-                const receivedData = device.readTimeout(1000);
-                const logString = bufferToString(receivedData);
-                this.logService.usb('[UhkHidDevice] USB[R]:', logString);
+                // const receivedData = device.readTimeout(1000);
+                // const logString = bufferToString(receivedData);
+                // this.logService.usb('[UhkHidDevice] USB[R]:', logString);
 
                 // if (receivedData[0] !== 0) {
                 //     return reject(new Error(`Communications error with UHK. Response code: ${receivedData[0]}`));
                 // }
 
-                return resolve(Buffer.from(receivedData));
+                // return resolve(Buffer.from(receivedData));
             } catch (err) {
                 this.logService.error('[UhkHidDevice] Transfer error: ', err);
                 this.close();
