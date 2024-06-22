@@ -46,8 +46,9 @@ if (!device) {
  ****************************************************************************************/
 const hid = new HID.HID(device.path);
 
-console.log('write: 4 9');
-hid.write([4, 9])
+const dataToSend = [4, 9];
+console.log('write:', dataToSend);
+hid.write(dataToSend)
 console.log('read 5 second timeout');
 const data = hid.readTimeout(5000); // 5 seconds timeout
 
