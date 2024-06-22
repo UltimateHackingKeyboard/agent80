@@ -40,6 +40,10 @@ export interface CommandLineArgs {
      */
     'reenumerate-and-exit'?: string;
     /**
+     * Report Id that used for USB communication
+     */
+    'report-id'?: number;
+    /**
      * simulate privilege escalation error
      */
     spe?: boolean;

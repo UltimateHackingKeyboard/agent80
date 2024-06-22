@@ -180,7 +180,19 @@ export class UhkHidDevice {
             }
 
             try {
-                const sendData = getTransferData(buffer);
+                // TODO: refactor the reportId part
+                let reportId = 0;
+
+                if (this.options['report-id'] !== undefined) {
+                    reportId = Number(this.options['report-id']);
+                    if (reportId === -1) {
+                        reportId = undefined;
+                    }
+                } else if (this.options.vid === 0x6125) {
+                    reportId = 4;
+                }
+
+                const sendData = getTransferData(buffer, reportId);
                 this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(sendData));
                 device.write(sendData);
                 await snooze(1);
@@ -251,7 +263,8 @@ export class UhkHidDevice {
             if (!jumped) {
                 const device = this.getDevice({ errorLogLevel: 'misc' });
                 if (device) {
-                    const data = getTransferData(message);
+                    // TODO: refactor the reportId part
+                    const data = getTransferData(message, 0);
                     this.logService.usb(`[UhkHidDevice] USB[T]: Enumerated device, mode: ${reenumMode}`);
                     this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(data).substr(3));
                     try {

@@ -43,13 +43,17 @@ export function getTransferBuffers(usbCommand: UsbCommand, configBuffer: Buffer)
 /**
  * Create the communication package that will send over USB and
  * @param {Buffer} buffer
+ * @param {number | undefined} reportId
  * @returns {number[]}
  * @private
  * @static
  */
-export function getTransferData(buffer: Buffer): number[] {
+export function getTransferData(buffer: Buffer, reportId: number | undefined): number[] {
     const data = convertBufferToIntArray(buffer);
-    data.unshift(4);
+
+    if (reportId !== undefined && reportId !== -1) {
+        data.unshift(reportId);
+    }
 
     return data;
 }
