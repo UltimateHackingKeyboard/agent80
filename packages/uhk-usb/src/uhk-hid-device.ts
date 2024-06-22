@@ -187,7 +187,7 @@ export class UhkHidDevice {
                 const receivedData = device.readTimeout(1000);
                 const logString = bufferToString(receivedData);
                 this.logService.usb('[UhkHidDevice] USB[R]:', logString);
-
+                receivedData.shift(); // remove reportId. TODO: do it better if we finalised the protocol
                 // if (receivedData[0] !== 0) {
                 //     return reject(new Error(`Communications error with UHK. Response code: ${receivedData[0]}`));
                 // }
