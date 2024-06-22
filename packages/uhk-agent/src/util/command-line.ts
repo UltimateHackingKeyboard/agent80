@@ -10,6 +10,7 @@ const optionDefinitions: commandLineArgs.OptionDefinition[] = [
     { name: 'log', type: String },
     { name: 'help', type: Boolean },
     { name: 'pid', type: Number },
+    { name: 'no-report-id', type: Boolean },
     { name: 'preserve-udev-rules', type: Boolean },
     { name: 'print-usb-devices', type: Boolean },
     { name: 'reenumerate-and-exit', type: String },
@@ -50,6 +51,11 @@ const sections: commandLineUsage.Section[] = [
                 name: 'log',
                 description: 'Set logging categories. --log=misc,usb. Default is "misc"',
                 typeLabel: 'config | misc | usb | all'
+            },
+            {
+                name: 'no-report-id',
+                description: "Don't use report id for USB communication. The default value depends on the UHK device. You can not set --report-id and --no-report-id at the same time.",
+                type: Boolean,
             },
             {
                 name: 'pid',

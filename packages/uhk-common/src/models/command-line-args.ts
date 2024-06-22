@@ -23,6 +23,10 @@ export interface CommandLineArgs {
      */
     help?: boolean;
     /**
+     * Don't use report id for USB communication
+     */
+    'no-report-id'?: boolean;
+    /**
      * USB product id
      */
     pid?: number;
