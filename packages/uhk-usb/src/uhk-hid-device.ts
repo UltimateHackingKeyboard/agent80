@@ -192,6 +192,7 @@ export class UhkHidDevice {
                     reportId = 4;
                 }
 
+                this.logService.setUsbReportId(reportId);
                 const sendData = this.getTransferData(buffer, reportId);
                 this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(sendData));
                 device.write(sendData);
