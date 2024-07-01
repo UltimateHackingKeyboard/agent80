@@ -10,16 +10,51 @@
             Loading...
         </div>
 
-        <div *ngIf="!state.loading && !state.files.length">
+        <div *ngIf="!state.loading && !state.tabs.length">
             No configurations were saved yet.
         </div>
 
-        <ul class="list-unstyled mb-0"
-            *ngIf="!state.loading && state.files.length">
-            <li *ngFor="let fileInfo of state.files; trackBy:trackByFn"
-                class="history-list-item">
+        <ul class="nav nav-tabs">
+            <li *ngFor="let tab of state.tabs; let index = index"
+                class="nav-item"
+                [class.disabled]="tab.disabled"
+                (click)="onSelectTab(index)">
+                <a class="nav-link"
+                    [class.active]="selectedTabIndex === index"
+                    [class.disabled]="tab.disabled">
+                    <span>{{ tab.displayText }}</span>
+                </a>
+           </li>
+        </ul>
+
+        <ul class="list-unstyled mb-0 mt-2"
+            *ngIf="!state.loading && state.tabs[selectedTabIndex].files.length">
+            <li *ngFor="let fileInfo of state.tabs[selectedTabIndex].files; trackBy:trackByFn">
                 <span class="btn btn-link btn-padding-0 current">
-                    {{ fileInfo.file | userConfigHistory }}
+                    {{ fileInfo.timestamp }}
+                </span>
+
+                <span class="btn btn-link btn-padding-0"
+                      *ngIf="fileInfo.showRestore"
+                      (click)="getUserConfigFromHistory.emit(fileInfo.file)"
+                      [class.disabled]="state.disabled">
+                            {{ fileInfo.displayText }}
+                </span>
+
+                <span class="btn btn-link btn-padding-0 current"
+                      *ngIf="!fileInfo.showRestore">
+                            {{ fileInfo.displayText }}
+                </span>
+            </li>
+
+            <li class="mt-2">
+                The following records were created before the grouping feature was introduced, and hence, they're displayed for every device.
+                <hr class="mt-0 mb-1">
+            </li>
+
+            <li *ngFor="let fileInfo of state.commonFiles; trackBy:trackByFn">
+                <span class="btn btn-link btn-padding-0 current">
+                    {{ fileInfo.timestamp }}
                 </span>
 
                 <span class="btn btn-link btn-padding-0"
