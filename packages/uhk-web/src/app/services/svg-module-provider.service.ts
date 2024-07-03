@@ -48,7 +48,7 @@ export class SvgModuleProviderService implements OnDestroy {
                     // TODO(UHK-80): Implement it when we have keyboard with case
                     this.descriptionAnimationParams = {
                         down: '-5.5em',
-                        up: '-2em',
+                        up: '-5em',
                         upLeftKeyCluster: '-8.5em',
                         upRightModule: '-10.5em',
                     };
@@ -56,7 +56,7 @@ export class SvgModuleProviderService implements OnDestroy {
                     this.right = new SvgModule(require('!xml-loader!../../devices/uhk80-right/layout.svg').svg);
                     this.isoLeft = new SvgModule(require('!xml-loader!../../modules/uhk80-left/layout-iso.svg').svg);
                     this.ansiLeft = new SvgModule(require('!xml-loader!../../modules/uhk80-left/layout-ansi.svg').svg);
-                    this.viewBox = '-550 560 1250 600';
+                    this.viewBox = '-550 610 1250 600';
                     break;
                 }
 
