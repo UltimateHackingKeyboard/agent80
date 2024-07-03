@@ -45,6 +45,13 @@ export class SvgModuleProviderService implements OnDestroy {
 
             switch (connectedDeviceId) {
                 case UHK_80_DEVICE.id: {
+                    // TODO(UHK-80): Implement it when we have keyboard with case
+                    this.descriptionAnimationParams = {
+                        down: '-5.5em',
+                        up: '-2em',
+                        upLeftKeyCluster: '-8.5em',
+                        upRightModule: '-10.5em',
+                    };
                     this.separator = convertXmlToSvgSeparator(require('!xml-loader!../../devices/uhk80-right/separator.svg').svg);
                     this.right = new SvgModule(require('!xml-loader!../../devices/uhk80-right/layout.svg').svg);
                     this.isoLeft = new SvgModule(require('!xml-loader!../../modules/uhk80-left/layout-iso.svg').svg);
