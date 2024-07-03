@@ -129,7 +129,7 @@ export class SvgKeyboardComponent implements AfterViewInit, OnInit, OnChanges {
                 private sanitizer: DomSanitizer,
                 private cdRef: ChangeDetectorRef) {
         this.modules = [];
-        this.viewBox = '-520 582 1100 470';
+        this.viewBox = '-600 660 1250 600';
         this.modulesState = {};
         this.halvesInfo = {
             areHalvesMerged: true,
