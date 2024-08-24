@@ -15,6 +15,7 @@
   "devDependencies": {
   },
   "dependencies": {
+    "@uhk/mcumgr": "0.0.0",
     "kboot": "0.0.0",
     "is-root": "3.0.0",
     "nrf-intel-hex": "1.3.0",
