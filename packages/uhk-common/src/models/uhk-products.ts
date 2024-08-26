@@ -41,7 +41,7 @@ export const UHK_60_V2_DEVICE: UhkDeviceProduct = {
 
 export const UHK_80_DEVICE: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK80_RIGHT,
-    firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.KBOOT,
+    firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.MCUBOOT,
     name: 'UHK 80',
     vendorId: UHK_VENDOR_ID,
     keyboardPid: 0x6125, // decimal 24869
