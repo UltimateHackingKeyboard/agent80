@@ -19,7 +19,7 @@ const OTHER_MSG_PACKET_2 = 20;
 
 const logger = debug('mcumgr:serial');
 
-export default class SerialPeripheral implements Peripheral {
+export class SerialPeripheral implements Peripheral {
     #serialPort: SerialPort;
 
     constructor(devicePath: string) {

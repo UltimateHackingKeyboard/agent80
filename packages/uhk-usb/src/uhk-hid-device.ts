@@ -34,10 +34,11 @@ import {
     retry,
     snooze
 } from './util.js';
-import { DeviceState, GetDeviceOptions, ReenumerateOption } from './models/index.js';
+import { DeviceState, GetDeviceOptions, ReenumerateOption, ReenumerateResult } from './models/index.js';
 import {
     calculateHalvesState,
     findDeviceByOptions,
+    findSerialDevicePairOfUsbDevice,
     getNumberOfConnectedDevices,
     getUhkDevices,
     usbDeviceJsonFormatter
@@ -233,8 +234,8 @@ export class UhkHidDevice {
     }
 
     async reenumerate(
-        { enumerationMode, productId, vendorId, timeout = BOOTLOADER_TIMEOUT_MS }: ReenumerateOption
-    ): Promise<void> {
+        { enumerationMode, productId, vendorId, timeout = BOOTLOADER_TIMEOUT_MS, bcdDevice }: ReenumerateOption
+    ): Promise<ReenumerateResult> {
         const reenumMode = EnumerationModes[enumerationMode].toString();
         this.logService.misc(`[UhkHidDevice] Start reenumeration, mode: ${reenumMode}, timeout: ${timeout}ms`);
 
@@ -254,13 +255,31 @@ export class UhkHidDevice {
         while (new Date().getTime() - startTime.getTime() < waitTimeout) {
             const devs = getUhkDevices(vendorId);
 
-            const inBootloaderMode = devs.some((x: Device) =>
+            // TODO: Handle multiple bootloader active. We will need it if agent will support the upgrade multiple UHK keyboard
+            const reenumeratedDevice = devs.find((x: Device) =>
                 x.vendorId === vendorId &&
-                x.productId === productId);
+                x.productId === productId &&
+                (!bcdDevice || x.release === bcdDevice)
+            );
 
-            if (inBootloaderMode) {
-                this.logService.misc('[UhkHidDevice] Reenumerating devices');
-                return;
+            if (reenumeratedDevice && bcdDevice) {
+                this.logService.misc('[UhkHidDevice] Reenumerating devices with bcdDevice');
+                const serialDevice = await findSerialDevicePairOfUsbDevice(reenumeratedDevice);
+                if (serialDevice) {
+                    return {
+                        usbPath: reenumeratedDevice.path,
+                        serialPath: serialDevice.path,
+                    };
+                }
+
+                this.logService.misc('[UhkHidDevice] Reenumerating devices with bcdDevice, serial port not found');
+            }
+            else if (reenumeratedDevice && !bcdDevice) {
+                this.logService.misc('[UhkHidDevice] Reenumerating devices without bcdDevice');
+                return {
+                    usbPath: reenumeratedDevice.path,
+                    serialPath: ''
+                };
             }
 
             await snooze(100);
@@ -268,7 +287,6 @@ export class UhkHidDevice {
             if (!jumped) {
                 const device = this.getDevice({ errorLogLevel: 'misc' });
                 if (device) {
-                    // TODO(UHK-80): double check report id when we know how to upgrade firmware.
                     const data = this.getTransferData(message, 0);
                     this.logService.usb(`[UhkHidDevice] USB[T]: Enumerated device, mode: ${reenumMode}`);
                     this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(data).substr(3));

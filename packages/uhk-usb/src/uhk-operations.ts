@@ -1,5 +1,7 @@
+import {McuManager, SerialPeripheral} from '@uhk/mcumgr';
 import * as fs from 'fs';
 import { DataOption, KBoot, Properties, UsbPeripheral } from 'kboot';
+import { FIRMWARE_UPGRADE_METHODS } from 'uhk-common';
 import {
     Buffer,
     ConfigSizesInfo,
@@ -39,6 +41,7 @@ import {
     snooze,
     waitForDevice
 } from './util.js';
+import calculateBcdDevice from './utils/calculate-bcd-device.js';
 import { convertMsToDuration, convertSlaveI2cErrorBuffer } from './utils/index.js';
 import { normalizeStatusBuffer } from './utils/normalize-status-buffer.js';
 import readUhkResponseAs0EndString from './utils/read-uhk-response-as-0-end-string.js';
@@ -61,12 +64,27 @@ export class UhkOperations {
         await this.device.write(transfer);
     }
 
+    public async updateDeviceFirmware(firmwarePath: string, device: UhkDeviceProduct): Promise<void> {
+        this.logService.misc(`[UhkOperations] Start flashing device firmware with ${device.firmwareUpgradeMethod}`);
+
+        switch (device.firmwareUpgradeMethod) {
+            case FIRMWARE_UPGRADE_METHODS.KBOOT:
+                return this.updateRightFirmwareWithKboot(firmwarePath, device);
+
+            case FIRMWARE_UPGRADE_METHODS.MCUBOOT:
+                return this.updateRightFirmwareWithMcuManager(firmwarePath, device);
+
+            default:
+                throw new Error(`Firmware upgrade method not implemented: ${device.firmwareUpgradeMethod}`);
+        }
+    }
+
     public async updateRightFirmwareWithKboot(firmwarePath: string, device: UhkDeviceProduct): Promise<void> {
         if (!(await existsAsync(firmwarePath))) {
             throw new Error(`Firmware path not found: ${firmwarePath}`);
         }
 
-        this.logService.misc('[UhkOperations] Start flashing right firmware');
+        this.logService.misc('[UhkOperations] Start flashing right firmware with kboot');
 
         this.logService.misc('[UhkOperations] Reenumerate bootloader');
         await this.device.reenumerate({
@@ -99,6 +117,36 @@ export class UhkOperations {
         await kboot.reset();
         this.logService.misc('[UhkOperations] Close communication channels');
         kboot.close();
+        this.logService.misc('[UhkOperations] Right firmware successfully flashed');
+    }
+
+    public async updateRightFirmwareWithMcuManager(firmwarePath: string, device: UhkDeviceProduct) {
+        if (!(await existsAsync(firmwarePath))) {
+            throw new Error(`Firmware path not found: ${firmwarePath}`);
+        }
+
+        this.logService.misc('[UhkOperations] Start flashing right firmware with mcumgr');
+
+        this.logService.misc('[UhkOperations] Reenumerate bootloader');
+        const reenumerationResult = await this.device.reenumerate({
+            enumerationMode: EnumerationModes.Bootloader,
+            vendorId: device.vendorId,
+            productId: device.bootloaderPid,
+            bcdDevice: calculateBcdDevice(device.id, true)
+        });
+        this.device.close();
+
+        this.logService.misc(`[UhkOperations] Init SerialPeripheral: ${reenumerationResult.serialPath}`);
+        const peripheral = new SerialPeripheral(reenumerationResult.serialPath);
+        const mcuManager = new McuManager(peripheral);
+        this.logService.misc('[UhkOperations] Read RIGHT firmware from file');
+        const configData = fs.readFileSync(firmwarePath);
+        this.logService.misc('[UhkOperations] Write memory with mcumgr');
+        await mcuManager.imageUpload(configData);
+        this.logService.misc('[UhkOperations] Reset mcu bootloader');
+        await mcuManager.reset();
+        this.logService.misc('[UhkOperations] Close mcu communication channels');
+        await mcuManager.close();
         this.logService.misc('[UhkOperations] Right firmware successfully flashed');
     }
 

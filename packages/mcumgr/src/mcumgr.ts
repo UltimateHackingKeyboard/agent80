@@ -26,7 +26,7 @@ const MTU = 124;
 
 const logger = debug('mcumgr');
 
-export default class McuManager {
+export class McuManager {
     #peripheral: Peripheral;
     #seq: number;
 

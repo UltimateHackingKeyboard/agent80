@@ -7,4 +7,6 @@ export interface ReenumerateOption {
     // The USB vendor id that should appear after the re-enumeration
     vendorId: number;
     timeout?: number;
+    // USB bcdDevice. Aliases are `bcdVersionNumber` or `release` it depends on OS
+    bcdDevice?: number;
 }

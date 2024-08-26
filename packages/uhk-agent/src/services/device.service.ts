@@ -361,7 +361,7 @@ export class DeviceService {
                 hardwareModules.rightModuleInfo.firmwareVersion);
             if (data.forceUpgrade || hardwareModules.rightModuleInfo.firmwareVersion !== packageJson.firmwareVersion) {
                 event.sender.send(IpcEvents.device.moduleFirmwareUpgrading, RIGHT_HALF_FIRMWARE_UPGRADE_MODULE_NAME);
-                await this.operations.updateRightFirmwareWithKboot(deviceFirmwarePath, uhkDeviceProduct);
+                await this.operations.updateDeviceFirmware(deviceFirmwarePath, uhkDeviceProduct);
                 this.logService.misc('[DeviceService] Waiting for keyboard');
                 await waitForDevice(uhkDeviceProduct.vendorId, uhkDeviceProduct.keyboardPid);
                 hardwareModules = await this.getHardwareModules(false);
@@ -492,7 +492,7 @@ export class DeviceService {
                 JSON.stringify(uhkDeviceProduct, usbDeviceJsonFormatter));
             const deviceFirmwarePath = getDeviceFirmwarePath(uhkDeviceProduct, packageJson);
 
-            await this.operations.updateRightFirmwareWithKboot(deviceFirmwarePath, uhkDeviceProduct);
+            await this.operations.updateDeviceFirmware(deviceFirmwarePath, uhkDeviceProduct);
 
             this.logService.misc('[DeviceService] Waiting for keyboard');
             await waitForDevice(uhkDeviceProduct.vendorId, uhkDeviceProduct.keyboardPid);

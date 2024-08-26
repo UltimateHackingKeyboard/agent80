@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf ./node_modules ./dist",
-    "lint": "eslint --ext .ts ."
+    "lint": "eslint --ext .ts .",
+    "test": "cross-env NODE_OPTIONS=--loader=ts-node/esm jasmine --config=jasmine.json"
   },
   "devDependencies": {
   },
@@ -24,6 +25,7 @@
     "uhk-common": "1.0.0"
   },
   "peerDependencies": {
-    "node-hid": "*"
+    "node-hid": "*",
+    "serialport": ">= 12.0.0"
   }
 }
