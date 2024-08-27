@@ -73,9 +73,10 @@ export class SerialPeripheral implements Peripheral {
         });
     }
 
-    async read(): Promise<Buffer> {
+    async read(timeout: number): Promise<Buffer> {
         logger('Start reading');
         let raw = Buffer.alloc(0);
+        const startTime = new Date().getTime();
 
         while (true) {
             const response = this.#serialPort.read();
@@ -106,6 +107,11 @@ export class SerialPeripheral implements Peripheral {
 
             logger('Read wait');
             await setTimeout(20);
+
+            if (new Date().getTime() - startTime > timeout) {
+                logger('Read timeout');
+                throw new Error('Read SerialPort timeout');
+            }
         }
 
         logger("raw response: %s", convertToHex([...raw]));

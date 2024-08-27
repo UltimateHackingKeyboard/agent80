@@ -3,7 +3,10 @@ export interface Peripheral {
 
     open(): Promise<void>;
 
-    read(): Promise<Buffer>;
+    /**
+     * @param timeout - timeout in millisecond
+     */
+    read(timeout: number): Promise<Buffer>;
 
     write(message: Array<number>): Promise<void>;
 }

@@ -144,7 +144,7 @@ export class McuManager {
         logger('NMP message: %s', convertToHex(message));
 
         await this.#peripheral.write(message);
-        const response = await this.#peripheral.read();
+        const response = await this.#peripheral.read(15000);
         logger('Nmp raw response %d', response);
         const parsedResponse = this.#parseNmpMessage<T>(response);
         logger("Nmp parsed response %o", parsedResponse);
