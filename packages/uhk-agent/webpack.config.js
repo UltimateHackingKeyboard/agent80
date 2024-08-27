@@ -16,7 +16,8 @@ module.exports = {
     target: 'electron-main',
     externals: {
         "node-hid": "require('node-hid')",
-        "serialport": "require('serialport')"
+        "serialport": "require('serialport')",
+        "usb": "require('usb')"
     },
     devtool: 'source-map',
     resolve: {

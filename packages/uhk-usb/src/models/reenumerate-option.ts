@@ -1,3 +1,5 @@
+import { UHK_DEVICE_IDS_TYPE } from 'uhk-common';
+
 import { EnumerationModes } from '../constants.js';
 
 export interface ReenumerateOption {
@@ -8,5 +10,5 @@ export interface ReenumerateOption {
     vendorId: number;
     timeout?: number;
     // USB bcdDevice. Aliases are `bcdVersionNumber` or `release` it depends on OS
-    bcdDevice?: number;
+    bcdDevice?: UHK_DEVICE_IDS_TYPE;
 }

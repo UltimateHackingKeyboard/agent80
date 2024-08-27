@@ -45,7 +45,10 @@ export const UHK_80_DEVICE: UhkDeviceProduct = {
     name: 'UHK 80',
     vendorId: UHK_VENDOR_ID,
     keyboardPid: 0x6125, // decimal 24869
-    bootloaderPid: 0x6123, // decimal 24867
+    // The bootloader id = keyboardPid the bcdDevice differentiate the 2 USB device.
+    // The upper byte of bcdDevice is 1; if the device is in bootloader mode, it is 0 otherwise.
+    bootloaderPid: 0x6125, // decimal 24869
+    // TODO: Review it before test module upgrade
     buspalPid: 0x6121 // decimal 24865
 };
 

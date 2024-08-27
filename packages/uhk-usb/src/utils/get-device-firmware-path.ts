@@ -8,5 +8,5 @@ export function getDeviceFirmwarePath(device: UhkDeviceProduct, firmwareJson: Fi
         throw new Error(`The firmware does not support: ${device.name}`);
     }
 
-    return join(dirname(firmwareJson.path), 'devices', deviceConfig.name, 'firmware.hex');
+    return join(dirname(firmwareJson.path), 'devices', deviceConfig.name, 'firmware.bin');
 }

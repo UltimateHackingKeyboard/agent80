@@ -2,7 +2,7 @@ import { Device, devices } from 'node-hid';
 import fse from 'fs-extra';
 import { EOL } from 'os';
 import MemoryMap from 'nrf-intel-hex';
-import { Buffer, LogService, UHK_DEVICES, UhkDeviceProduct } from 'uhk-common';
+import { Buffer, FIRMWARE_UPGRADE_METHODS, LogService, UHK_DEVICES, UhkDeviceProduct } from 'uhk-common';
 
 import { MAX_USB_PAYLOAD_SIZE, UsbCommand } from './constants.js';
 
@@ -103,7 +103,11 @@ export const getUhkDevice = (dev: Device): UhkDeviceProduct => {
 };
 
 export const isBootloader = (dev: Device): boolean => {
-    return UHK_DEVICES.some(device => dev.vendorId === device.vendorId && dev.productId === device.bootloaderPid);
+    return UHK_DEVICES.some(device => {
+        return dev.vendorId === device.vendorId &&
+            dev.productId === device.bootloaderPid &&
+            device.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.KBOOT;
+    });
 };
 
 export const getFileContentAsync = async (filePath: string): Promise<Array<string>> => {
