@@ -95,9 +95,7 @@ export class UhkHidDevice {
             }
 
             this.logService.misc('[UhkHidDevice] Devices before checking permission:');
-            const devs = this.options.vid
-                ? getUhkDevices([this.options.vid])
-                : getUhkDevices();
+            const devs = this.getUhkDevices();
             this.listAvailableDevices(devs);
 
             const dev = this.options.vid
@@ -126,7 +124,7 @@ export class UhkHidDevice {
      * @returns {DeviceConnectionState}
      */
     public async getDeviceConnectionStateAsync(): Promise<DeviceConnectionState> {
-        const devs = getUhkDevices([this.options.vid]);
+        const devs = this.getUhkDevices();
         const result: DeviceConnectionState = {
             bootloaderActive: false,
             communicationInterfaceAvailable: false,
@@ -435,7 +433,7 @@ export class UhkHidDevice {
      */
     private connectToDevice({ errorLogLevel = 'error' }: GetDeviceOptions = {}): void {
         try {
-            const devs = getUhkDevices([this.options.vid]);
+            const devs = this.getUhkDevices();
             this.listAvailableDevices(devs);
 
             this._deviceInfo = this.options.vid
@@ -497,4 +495,9 @@ export class UhkHidDevice {
         return data;
     }
 
+    private getUhkDevices(): Array<Device> {
+        return this.options.vid
+            ? getUhkDevices([this.options.vid])
+            : getUhkDevices();
+    }
 }
