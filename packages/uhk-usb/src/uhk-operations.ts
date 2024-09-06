@@ -127,11 +127,9 @@ export class UhkOperations {
         this.logService.misc('[UhkOperations] Start flashing right firmware with mcumgr');
 
         this.logService.misc('[UhkOperations] Reenumerate bootloader');
-        const reenumerationResult = await this.device.reenumerateMcuBootloader({
+        const reenumerationResult = await this.device.reenumerate({
             enumerationMode: EnumerationModes.Bootloader,
-            vendorId: device.vendorId,
-            productId: device.bootloaderPid,
-            bcdDevice: device.id,
+            vidPidPairs: device.bootloader,
         });
         this.device.close();
 

@@ -250,6 +250,8 @@ export class UhkHidDevice {
 
                     return {
                         vidPidPair: vidPid,
+                        serialPath: '',
+                        usbPath: '',
                     };
                 }
             }
