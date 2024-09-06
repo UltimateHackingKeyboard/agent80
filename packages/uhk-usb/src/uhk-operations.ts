@@ -88,8 +88,8 @@ export class UhkOperations {
 
         this.logService.misc('[UhkOperations] Reenumerate bootloader');
         const reenumerateResult = await this.device.reenumerate({
+            device,
             enumerationMode: EnumerationModes.Bootloader,
-            vidPidPairs: device.bootloader
         });
         this.device.close();
         const kboot = new KBoot(new UsbPeripheral({ productId: reenumerateResult.vidPidPair.pid, vendorId: reenumerateResult.vidPidPair.vid }));
@@ -128,8 +128,8 @@ export class UhkOperations {
 
         this.logService.misc('[UhkOperations] Reenumerate bootloader');
         const reenumerationResult = await this.device.reenumerate({
+            device,
             enumerationMode: EnumerationModes.Bootloader,
-            vidPidPairs: device.bootloader,
         });
         this.device.close();
 
@@ -158,8 +158,8 @@ export class UhkOperations {
     ): Promise<void> {
         this.logService.misc(`[UhkOperations] Start flashing "${module.name}" module firmware`);
         await this.device.reenumerate({
+            device,
             enumerationMode: EnumerationModes.NormalKeyboard,
-            vidPidPairs: device.keyboard
         });
         this.device.close();
         await snooze(1000);
@@ -176,8 +176,8 @@ export class UhkOperations {
         }
 
         const reenumerateResult = await this.device.reenumerate({
+            device,
             enumerationMode: EnumerationModes.Buspal,
-            vidPidPairs: device.buspal,
         });
         this.device.close();
         this.logService.misc('[UhkOperations] Waiting for buspal');
@@ -229,8 +229,8 @@ export class UhkOperations {
 
         await snooze(1000);
         const reenumerateResult1 = await this.device.reenumerate({
+            device,
             enumerationMode: EnumerationModes.NormalKeyboard,
-            vidPidPairs: device.keyboard,
         });
         this.device.close();
         this.logService.misc('[UhkOperations] Waiting for normalKeyboard');

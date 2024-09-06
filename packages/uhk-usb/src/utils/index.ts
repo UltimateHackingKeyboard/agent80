@@ -5,7 +5,6 @@ export * from './calculate-halves-state.js';
 export * from './convert-ms-to-duration.js';
 export * from './convert-slave-i2c-error-buffer.js';
 export * from './find-device-by-options.js';
-export * from './find-serial-bootloader.js';
 export * from './get-current-uhk-device-product.js';
 export * from './get-current-uhk-device-product-by-bootloader-id.js';
 export * from './get-device-enumerate-vid-pid-pairs.js';
