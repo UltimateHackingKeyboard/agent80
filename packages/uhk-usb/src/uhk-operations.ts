@@ -127,14 +127,14 @@ export class UhkOperations {
         this.logService.misc('[UhkOperations] Start flashing right firmware with mcumgr');
 
         this.logService.misc('[UhkOperations] Reenumerate bootloader');
-        const reenumerationResult = await this.device.reenumerate({
+        const reenumerateResult = await this.device.reenumerate({
             device,
             enumerationMode: EnumerationModes.Bootloader,
         });
         this.device.close();
-
-        this.logService.misc(`[UhkOperations] Init SerialPeripheral: ${reenumerationResult.serialPath}`);
-        const peripheral = new SerialPeripheral(reenumerationResult.serialPath);
+        await waitForDevice(reenumerateResult.vidPidPair.vid, reenumerateResult.vidPidPair.pid);
+        this.logService.misc(`[UhkOperations] Init SerialPeripheral: ${reenumerateResult.serialPath}`);
+        const peripheral = new SerialPeripheral(reenumerateResult.serialPath);
         const mcuManager = new McuManager(peripheral);
         this.logService.misc('[UhkOperations] Read RIGHT firmware from file');
         const configData = fs.readFileSync(firmwarePath);
