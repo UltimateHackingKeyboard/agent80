@@ -132,7 +132,8 @@ export class UhkOperations {
             enumerationMode: EnumerationModes.Bootloader,
         });
         this.device.close();
-        await waitForDevice(reenumerateResult.vidPidPair.vid, reenumerateResult.vidPidPair.pid);
+        // Give 1 sec to windows to install driver when first time appearing the mcu bootloader
+        await snooze(1000);
         this.logService.misc(`[UhkOperations] Init SerialPeripheral: ${reenumerateResult.serialPath}`);
         const peripheral = new SerialPeripheral(reenumerateResult.serialPath);
         const mcuManager = new McuManager(peripheral);
