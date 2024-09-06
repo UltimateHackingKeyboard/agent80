@@ -106,7 +106,7 @@ export class SerialPeripheral implements Peripheral {
             }
 
             logger('Read wait');
-            await setTimeout(20);
+            await setTimeout(2);
 
             if (new Date().getTime() - startTime > timeout) {
                 logger('Read timeout');
@@ -161,14 +161,14 @@ export class SerialPeripheral implements Peripheral {
             } else {
                 // Slower platforms take some time to process each segment and have very small receive buffers.
                 // Give them a bit of time here
-                await setTimeout(20);
+                await setTimeout(2);
                 await this.#_write([OTHER_MSG_PACKET_1, OTHER_MSG_PACKET_2]);
             }
 
             // Ensure that the total frame fits into 128 bytes.
             // Base 64 is 3 ascii to 4 base 64 byte encoding, so the number below should be a multiple of 4.
             // We need to save room for the header (2 byte) and carriage return (and possibly LF 2 bytes).
-            const writeLen = Math.min(124, totalLength - written);
+            const writeLen = Math.min(1020, totalLength - written);
             await this.#_write(base64Encoded.slice(written, written + writeLen));
             await this.#_write('\n');
 

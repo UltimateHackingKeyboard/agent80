@@ -22,7 +22,7 @@ import fromUint16 from './util/from-uint16.js';
 
 const NMP_HEADER_SIZE = 8;
 // Message transfer unit. TODO: maybe it should be exposed by peripheral.
-const MTU = 124;
+const MTU = 1020;
 
 const logger = debug('mcumgr');
 
