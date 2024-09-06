@@ -55,7 +55,7 @@ import {
     UhkOperations,
     UsbVariables,
     usbDeviceJsonFormatter,
-    waitForDevice
+    waitForDevices
 } from 'uhk-usb';
 import { emptyDir } from 'fs-extra';
 import os from 'os';
@@ -364,7 +364,7 @@ export class DeviceService {
                 event.sender.send(IpcEvents.device.moduleFirmwareUpgrading, RIGHT_HALF_FIRMWARE_UPGRADE_MODULE_NAME);
                 await this.operations.updateDeviceFirmware(deviceFirmwarePath, uhkDeviceProduct);
                 this.logService.misc('[DeviceService] Waiting for keyboard');
-                await waitForDevice(uhkDeviceProduct.vendorId, uhkDeviceProduct.keyboardPid);
+                await waitForDevices(uhkDeviceProduct.keyboard);
                 hardwareModules = await this.getHardwareModules(false);
                 event.sender.send(IpcEvents.device.hardwareModulesLoaded, hardwareModules);
 
@@ -498,7 +498,7 @@ export class DeviceService {
             await this.operations.updateDeviceFirmware(deviceFirmwarePath, uhkDeviceProduct);
 
             this.logService.misc('[DeviceService] Waiting for keyboard');
-            await waitForDevice(uhkDeviceProduct.vendorId, uhkDeviceProduct.keyboardPid);
+            await waitForDevices(uhkDeviceProduct.keyboard);
 
             this.logService.config(
                 '[DeviceService] User configuration will be saved after right module recovery',
