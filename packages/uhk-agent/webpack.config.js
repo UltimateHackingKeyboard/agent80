@@ -17,7 +17,6 @@ module.exports = {
     externals: {
         "node-hid": "require('node-hid')",
         "serialport": "require('serialport')",
-        "usb": "require('usb')"
     },
     devtool: 'source-map',
     resolve: {

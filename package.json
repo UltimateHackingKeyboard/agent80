@@ -62,7 +62,6 @@
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "tsx": "4.9.1",
-    "usb": "2.13.0",
     "typescript": "5.3.3",
     "webpack": "5.90.3",
     "webpack-cli": "5.1.4"

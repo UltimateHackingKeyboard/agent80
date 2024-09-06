@@ -26,7 +26,6 @@
   },
   "peerDependencies": {
     "node-hid": "*",
-    "usb": ">= 2.13.0",
     "serialport": ">= 12.0.0"
   }
 }
