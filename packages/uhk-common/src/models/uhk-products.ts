@@ -97,6 +97,27 @@ export const UHK_60_V2_DEVICE: UhkDeviceProduct = {
     reportId: 0,
 };
 
+export const UHK_80_DEVICE_LEFT: UhkDeviceProduct = {
+    id: UHK_DEVICE_IDS.UHK80_LEFT,
+    firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.MCUBOOT,
+    name: 'UHK 80',
+    keyboard: [
+        {
+            vid: UHK_VENDOR_ID,
+            pid: 0x0007, // decimal 9
+        },
+    ],
+    bootloader: [
+        {
+            vid: UHK_VENDOR_ID,
+            pid: 0x0006, // decimal 8
+        },
+    ],
+    // TODO: Implement when we know
+    buspal: [],
+    reportId: 4,
+};
+
 export const UHK_80_DEVICE: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK80_RIGHT,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.MCUBOOT,
@@ -118,7 +139,6 @@ export const UHK_80_DEVICE: UhkDeviceProduct = {
     reportId: 4,
 };
 
-
 export const UHK_DEVICES: Array<UhkDeviceProduct> = [
     UHK_60_DEVICE,
     UHK_60_V2_DEVICE,
@@ -131,6 +151,8 @@ export interface UhkModule {
     configPath?: string;
     slotId: ModuleSlotToId;
     i2cAddress: ModuleSlotToI2cAddress;
+    // Which uhk device used as firmware upgrade device
+    firmwareDevice?: UhkDeviceProduct;
     firmwareUpgradeSupported: boolean;
 }
 

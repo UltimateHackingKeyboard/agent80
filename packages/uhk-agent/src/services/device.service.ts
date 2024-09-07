@@ -383,39 +383,39 @@ export class DeviceService {
                 this.logService.misc('Skip right firmware upgrade.');
             }
 
+            const leftModuleInfo: ModuleInfo = hardwareModules.moduleInfos
+                .find(moduleInfo => moduleInfo.module.slotId === ModuleSlotToId.leftHalf);
+            const leftModuleFirmwareInfo = hardwareModules.rightModuleInfo.modules[leftModuleInfo.module.id];
+
+            this.logService.misc('[DeviceService] Left module firmware version: ', leftModuleInfo.info.firmwareVersion);
+            this.logService.misc('[DeviceService] Current left module firmware checksum: ', leftModuleInfo.info.firmwareChecksum);
+            if (leftModuleFirmwareInfo) {
+                this.logService.misc('[DeviceService] New left module firmware checksum: ', leftModuleFirmwareInfo.md5);
+            }
+
+            const isLeftModuleFirmwareSame = isSameFirmware(
+                leftModuleInfo.info,
+                {
+                    firmwareChecksum: leftModuleFirmwareInfo?.md5,
+                    firmwareVersion: packageJson.firmwareVersion
+                }
+            );
+
+            if (data.forceUpgrade || !isLeftModuleFirmwareSame) {
+                event.sender.send(IpcEvents.device.moduleFirmwareUpgrading, leftModuleInfo.module.name);
+                await this.operations
+                    .updateModuleWithKboot(
+                        getModuleFirmwarePath(leftModuleInfo.module, packageJson),
+                        uhkDeviceProduct,
+                        leftModuleInfo.module
+                    );
+            } else {
+                event.sender.send(IpcEvents.device.moduleFirmwareUpgradeSkip, leftModuleInfo.module.name);
+                this.logService.misc('[DeviceService] Skip left firmware upgrade.');
+            }
+
             // TODO: implement MCUBOOT version
             if (uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.KBOOT) {
-                const leftModuleInfo: ModuleInfo = hardwareModules.moduleInfos
-                    .find(moduleInfo => moduleInfo.module.slotId === ModuleSlotToId.leftHalf);
-                const leftModuleFirmwareInfo = hardwareModules.rightModuleInfo.modules[leftModuleInfo.module.id];
-
-                this.logService.misc('[DeviceService] Left module firmware version: ', leftModuleInfo.info.firmwareVersion);
-                this.logService.misc('[DeviceService] Current left module firmware checksum: ', leftModuleInfo.info.firmwareChecksum);
-                if (leftModuleFirmwareInfo) {
-                    this.logService.misc('[DeviceService] New left module firmware checksum: ', leftModuleFirmwareInfo.md5);
-                }
-
-                const isLeftModuleFirmwareSame = isSameFirmware(
-                    leftModuleInfo.info,
-                    {
-                        firmwareChecksum: leftModuleFirmwareInfo?.md5,
-                        firmwareVersion: packageJson.firmwareVersion
-                    }
-                );
-
-                if (data.forceUpgrade || !isLeftModuleFirmwareSame) {
-                    event.sender.send(IpcEvents.device.moduleFirmwareUpgrading, leftModuleInfo.module.name);
-                    await this.operations
-                        .updateModuleWithKboot(
-                            getModuleFirmwarePath(leftModuleInfo.module, packageJson),
-                            uhkDeviceProduct,
-                            leftModuleInfo.module
-                        );
-                } else {
-                    event.sender.send(IpcEvents.device.moduleFirmwareUpgradeSkip, leftModuleInfo.module.name);
-                    this.logService.misc('[DeviceService] Skip left firmware upgrade.');
-                }
-
                 for (const moduleInfo of hardwareModules.moduleInfos) {
                     if (moduleInfo.module.slotId === ModuleSlotToId.leftHalf) {
                         // Left half upgrade mandatory, it is running before the other modules upgrade.
