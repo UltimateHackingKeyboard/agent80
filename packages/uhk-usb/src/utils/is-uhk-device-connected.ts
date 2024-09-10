@@ -2,14 +2,15 @@ import { devices as HidDevices } from 'node-hid';
 import {SerialPort} from 'serialport';
 import { UhkDeviceProduct } from 'uhk-common';
 
+import { isUhkCommunicationUsage } from '../util.js';
+
 export async function isUhkDeviceConnected(uhkDevice: UhkDeviceProduct): Promise<boolean> {
     const hidDevices = HidDevices();
 
     for (const device of hidDevices) {
         if ((uhkDevice.keyboard.some(vidPid => vidPid.vid === device.vendorId && vidPid.pid === device.productId)
                 // TODO: remove duplication of isUhkCommunicationInterface
-                && ((device.usagePage === 128 && device.usage === 129) || // Old firmware
-                (device.usagePage === 65280 && device.usage === 1)) // New firmware
+                && isUhkCommunicationUsage(device)
         )
             || uhkDevice.bootloader.some(vidPid => vidPid.vid === device.vendorId && vidPid.pid === device.productId)
         ) {

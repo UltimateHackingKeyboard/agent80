@@ -33,6 +33,7 @@ import {
     getUhkDevice,
     isBootloader,
     isUhkCommunicationInterface,
+    isUhkCommunicationUsage,
     retry,
     snooze
 } from './util.js';
@@ -285,8 +286,7 @@ export class UhkHidDevice {
                         return dev.vendorId === vidPid.vid
                             && dev.productId === vidPid.pid
                             // TODO: remove duplication of isUhkCommunicationInterface
-                            && ((dev.usagePage === 128 && dev.usage === 129) || // Old firmware
-                                (dev.usagePage === 65280 && dev.usage === 1)); // New firmware;
+                            && isUhkCommunicationUsage(dev);
                     });
 
                     if (foundDevice) {
