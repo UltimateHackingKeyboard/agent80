@@ -2,7 +2,7 @@ import fse from 'fs-extra';
 import isRoot from 'is-root';
 import { Device, HID } from 'node-hid';
 import * as path from 'path';
-import {SerialPort} from 'serialport';
+import { SerialPort } from 'serialport';
 import {
     Buffer,
     CommandLineArgs,
@@ -277,8 +277,24 @@ export class UhkHidDevice {
             await snooze(100);
 
             if (!jumped) {
-                const device = this.getDevice({ errorLogLevel: 'misc' });
-                if (device) {
+                let keyboardDevice: HID;
+                for (const vidPid of device.keyboard) {
+                    const devs = getUhkDevices([vidPid.vid]);
+                    const foundDevice = devs.find((dev: Device) => {
+                        return dev.vendorId === vidPid.vid
+                            && dev.productId === vidPid.pid
+                            // TODO: remove duplication of isUhkCommunicationInterface
+                            && ((dev.usagePage === 128 && dev.usage === 129) || // Old firmware
+                                (dev.usagePage === 65280 && dev.usage === 1)); // New firmware;
+                    });
+
+                    if (foundDevice) {
+                        keyboardDevice = new HID(foundDevice.path);
+                        this._deviceInfo = foundDevice;
+                    }
+                }
+
+                if (keyboardDevice) {
                     const reportId = this.getReportId();
                     this.logService.setUsbReportId(reportId);
                     const message = Buffer.from([
@@ -293,8 +309,8 @@ export class UhkHidDevice {
                     this.logService.usb(`[UhkHidDevice] USB[T]: Enumerated device, mode: ${reenumMode}`);
                     this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(data).substr(3));
                     try {
-                        device.write(data);
-                        device.close();
+                        keyboardDevice.write(data);
+                        keyboardDevice.close();
                     } catch (error) {
                         this.logService.misc('[UhkHidDevice] Reenumeration error. We hope it would not break the process', error);
                     }

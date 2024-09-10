@@ -33,6 +33,7 @@ import {
     shouldUpgradeAgent,
     shouldUpgradeFirmware,
     simulateInvalidUserConfigError,
+    UHK_80_DEVICE_LEFT,
     UHK_MODULES,
     UpdateFirmwareData,
     UploadFileData,
@@ -48,6 +49,7 @@ import {
     getDeviceFirmwarePath,
     getFirmwarePackageJson,
     getModuleFirmwarePath,
+    isUhkDeviceConnected,
     readUhkResponseAs0EndString,
     snooze,
     TmpFirmware,
@@ -55,7 +57,8 @@ import {
     UhkOperations,
     UsbVariables,
     usbDeviceJsonFormatter,
-    waitForDevices
+    waitForDevices,
+    waitForUhkDeviceConnected
 } from 'uhk-usb';
 import { emptyDir } from 'fs-extra';
 import os from 'os';
@@ -403,12 +406,31 @@ export class DeviceService {
 
             if (data.forceUpgrade || !isLeftModuleFirmwareSame) {
                 event.sender.send(IpcEvents.device.moduleFirmwareUpgrading, leftModuleInfo.module.name);
-                await this.operations
-                    .updateModuleWithKboot(
-                        getModuleFirmwarePath(leftModuleInfo.module, packageJson),
-                        uhkDeviceProduct,
-                        leftModuleInfo.module
-                    );
+
+                if(uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.MCUBOOT) {
+                    if (!(await isUhkDeviceConnected(UHK_80_DEVICE_LEFT))) {
+                        this.logService.misc('[DeviceService] Please connect your UHK80 left keyboard with USB cable.');
+                    }
+
+                    await waitForUhkDeviceConnected(UHK_80_DEVICE_LEFT);
+
+                    const firmwarePath = getDeviceFirmwarePath(UHK_80_DEVICE_LEFT, packageJson);
+                    await this.operations.updateRightFirmwareWithMcuManager(firmwarePath, UHK_80_DEVICE_LEFT);
+
+                    if (!(await isUhkDeviceConnected(uhkDeviceProduct))) {
+                        this.logService.misc('[DeviceService] Please connect your UHK80 right keyboard with USB cable.');
+                    }
+
+                    await waitForUhkDeviceConnected(uhkDeviceProduct);
+                }
+                else {
+                    await this.operations
+                        .updateModuleWithKboot(
+                            getModuleFirmwarePath(leftModuleInfo.module, packageJson),
+                            uhkDeviceProduct,
+                            leftModuleInfo.module
+                        );
+                }
             } else {
                 event.sender.send(IpcEvents.device.moduleFirmwareUpgradeSkip, leftModuleInfo.module.name);
                 this.logService.misc('[DeviceService] Skip left firmware upgrade.');
