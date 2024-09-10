@@ -415,7 +415,7 @@ export class DeviceService {
                     await waitForUhkDeviceConnected(UHK_80_DEVICE_LEFT);
 
                     const firmwarePath = getDeviceFirmwarePath(UHK_80_DEVICE_LEFT, packageJson);
-                    await this.operations.updateRightFirmwareWithMcuManager(firmwarePath, UHK_80_DEVICE_LEFT);
+                    await this.operations.updateFirmwareWithMcuManager(firmwarePath, UHK_80_DEVICE_LEFT);
 
                     if (!(await isUhkDeviceConnected(uhkDeviceProduct))) {
                         this.logService.misc('[DeviceService] Please connect your UHK80 right keyboard with USB cable.');

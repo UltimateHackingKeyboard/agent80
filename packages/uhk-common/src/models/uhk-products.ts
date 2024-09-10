@@ -15,6 +15,9 @@ export interface VidPidPair {
 export interface UhkDeviceProduct {
     id: UHK_DEVICE_IDS_TYPE;
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS_TYPE,
+    // Use it in logs instead of the name because UHK 80 left and right have the same name.
+    // But we have to differentiate them in the logs
+    logName: string;
     name: string;
     keyboard: VidPidPair[];
     bootloader: VidPidPair[];
@@ -25,6 +28,7 @@ export interface UhkDeviceProduct {
 export const UNKNOWN_DEVICE: UhkDeviceProduct = {
     id: 0 as UHK_DEVICE_IDS_TYPE,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.KBOOT,
+    logName: 'Unknown',
     name: 'Unknown',
     keyboard: [],
     bootloader: [],
@@ -35,6 +39,7 @@ export const UNKNOWN_DEVICE: UhkDeviceProduct = {
 export const UHK_60_DEVICE: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK60V1_RIGHT,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.KBOOT,
+    logName: 'UHK 60 v1',
     name: 'UHK 60 v1',
     keyboard: [
         {
@@ -68,6 +73,7 @@ export const UHK_60_DEVICE: UhkDeviceProduct = {
 export const UHK_60_V2_DEVICE: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK60V2_RIGHT,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.KBOOT,
+    logName: 'UHK 60 v2',
     name: 'UHK 60 v2',
     keyboard: [
         {
@@ -101,6 +107,7 @@ export const UHK_60_V2_DEVICE: UhkDeviceProduct = {
 export const UHK_80_DEVICE_LEFT: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK80_LEFT,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.MCUBOOT,
+    logName: 'UHK 80 left',
     name: 'UHK 80',
     keyboard: [
         {
@@ -122,6 +129,7 @@ export const UHK_80_DEVICE_LEFT: UhkDeviceProduct = {
 export const UHK_80_DEVICE: UhkDeviceProduct = {
     id: UHK_DEVICE_IDS.UHK80_RIGHT,
     firmwareUpgradeMethod: FIRMWARE_UPGRADE_METHODS.MCUBOOT,
+    logName: 'UHK 80 right',
     name: 'UHK 80',
     keyboard: [
         {
