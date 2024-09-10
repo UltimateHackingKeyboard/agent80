@@ -2,7 +2,18 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import { getCurrentUhkDeviceProduct, getDeviceFirmwarePath, getFirmwarePackageJson } from 'uhk-usb';
+import {
+    FIRMWARE_UPGRADE_METHODS,
+    LEFT_HALF_MODULE,
+    UHK_80_DEVICE_LEFT,
+} from 'uhk-common';
+import {
+    getCurrentUhkDeviceProduct,
+    getDeviceFirmwarePath,
+    getDeviceUserConfigPath,
+    getFirmwarePackageJson,
+    getModuleFirmwarePath
+} from 'uhk-usb';
 
 import Uhk, { errorHandler, yargs } from './src/index.js';
 
@@ -42,7 +53,10 @@ import Uhk, { errorHandler, yargs } from './src/index.js';
             process.exit(1);
         }
 
-        const leftFirmwarePath = path.join(firmwarePath, '/modules/uhk60-left.bin');
+        const leftFirmwarePath = uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.MCUBOOT
+            ? getDeviceFirmwarePath(UHK_80_DEVICE_LEFT, packageJson)
+            : getModuleFirmwarePath(LEFT_HALF_MODULE, packageJson);
+
         if (!fs.existsSync(leftFirmwarePath)) {
             console.error('Left firmware path not found!');
             process.exit(1);
@@ -50,10 +64,14 @@ import Uhk, { errorHandler, yargs } from './src/index.js';
 
         const { operations } = Uhk(argv);
         await operations.updateDeviceFirmware(rightFirmwarePath, uhkDeviceProduct);
-        await operations.updateLeftModuleWithKboot(leftFirmwarePath, uhkDeviceProduct);
-
+        if (uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.MCUBOOT) {
+            await operations.updateFirmwareWithMcuManager(leftFirmwarePath, UHK_80_DEVICE_LEFT);
+        }
+        else {
+            await operations.updateLeftModuleWithKboot(leftFirmwarePath, uhkDeviceProduct);
+        }
         if (argv['overwrite-user-config']) {
-            const userConfigPath = path.join(firmwarePath, '/devices/uhk60-right/config.bin');
+            const userConfigPath = getDeviceUserConfigPath(uhkDeviceProduct, packageJson);
             if (!fs.existsSync(userConfigPath)) {
                 console.error('User configuration path not found!');
                 process.exit(1);

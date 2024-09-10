@@ -8,6 +8,7 @@ export * from './get-current-uhk-device-product.js';
 export * from './get-current-uhk-device-product-by-bootloader-id.js';
 export * from './get-device-enumerate-vid-pid-pairs.js';
 export * from './get-device-firmware-path.js';
+export * from './get-device-user-config-path.js';
 export * from './get-firmware-package-json.js';
 export * from './get-module-firmware-path.js';
 export * from './get-number-of-connected-devices.js';
