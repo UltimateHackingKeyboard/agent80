@@ -409,7 +409,7 @@ export class DeviceService {
 
                 if(uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.MCUBOOT) {
                     if (!(await isUhkDeviceConnected(UHK_80_DEVICE_LEFT))) {
-                        this.logService.misc('[DeviceService] Please connect your UHK80 left keyboard with USB cable.');
+                        this.logService.misc(`[DeviceService] Please connect your ${UHK_80_DEVICE_LEFT.logName} keyboard with USB cable.`);
                     }
 
                     await waitForUhkDeviceConnected(UHK_80_DEVICE_LEFT);
@@ -418,7 +418,7 @@ export class DeviceService {
                     await this.operations.updateFirmwareWithMcuManager(firmwarePath, UHK_80_DEVICE_LEFT);
 
                     if (!(await isUhkDeviceConnected(uhkDeviceProduct))) {
-                        this.logService.misc('[DeviceService] Please connect your UHK80 right keyboard with USB cable.');
+                        this.logService.misc(`[DeviceService] Please connect your ${uhkDeviceProduct.logName} keyboard with USB cable.`);
                     }
 
                     await waitForUhkDeviceConnected(uhkDeviceProduct);

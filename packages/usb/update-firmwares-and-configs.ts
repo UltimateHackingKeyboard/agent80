@@ -7,6 +7,8 @@ import {
     LEFT_HALF_MODULE,
     UHK_80_DEVICE_LEFT,
 } from 'uhk-common';
+import { waitForUhkDeviceConnected } from 'uhk-usb';
+import { isUhkDeviceConnected } from 'uhk-usb';
 import {
     getCurrentUhkDeviceProduct,
     getDeviceFirmwarePath,
@@ -70,7 +72,17 @@ import Uhk, { errorHandler, getDeviceIdFromArg, yargs } from './src/index.js';
         const { operations } = Uhk(argv);
         await operations.updateDeviceFirmware(rightFirmwarePath, uhkDeviceProduct);
         if (uhkDeviceProduct.firmwareUpgradeMethod === FIRMWARE_UPGRADE_METHODS.MCUBOOT) {
+            if (!(await isUhkDeviceConnected(UHK_80_DEVICE_LEFT))) {
+                console.log(`[DeviceService] Please connect your ${UHK_80_DEVICE_LEFT.logName} keyboard with USB cable.`);
+            }
+            await waitForUhkDeviceConnected(UHK_80_DEVICE_LEFT);
+
             await operations.updateFirmwareWithMcuManager(leftFirmwarePath, UHK_80_DEVICE_LEFT);
+
+            if (!(await isUhkDeviceConnected(uhkDeviceProduct))) {
+                console.log(`[DeviceService] Please connect your ${uhkDeviceProduct.logName} keyboard with USB cable.`);
+            }
+            await waitForUhkDeviceConnected(uhkDeviceProduct);
         }
         else {
             await operations.updateLeftModuleWithKboot(leftFirmwarePath, uhkDeviceProduct);
