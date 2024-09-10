@@ -229,6 +229,7 @@ export class UhkHidDevice {
     async reenumerate(
         { enumerationMode, device, timeout = BOOTLOADER_TIMEOUT_MS }: ReenumerateOption
     ): Promise<ReenumerateResult> {
+        this.close();
         const reenumMode = EnumerationModes[enumerationMode].toString();
         this.logService.misc(`[UhkHidDevice] Start reenumeration, mode: ${reenumMode}, timeout: ${timeout}ms`);
         const vidPidPairs = getDeviceEnumerateVidPidPairs(device, enumerationMode);
@@ -295,7 +296,7 @@ export class UhkHidDevice {
                 }
 
                 if (keyboardDevice) {
-                    const reportId = this.getReportId();
+                    const reportId = device.reportId;
                     this.logService.setUsbReportId(reportId);
                     const message = Buffer.from([
                         UsbCommand.Reenumerate,
