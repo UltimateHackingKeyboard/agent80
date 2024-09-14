@@ -140,7 +140,8 @@ export class UhkHidDevice {
             },
             hardwareModules: {},
             isMacroStatusDirty: false,
-            multiDevice: getNumberOfConnectedDevices() > 1
+            multiDevice: getNumberOfConnectedDevices() > 1,
+            udevRulesInfo: await this.getUdevInfoAsync(),
         };
 
         if (result.multiDevice) {
