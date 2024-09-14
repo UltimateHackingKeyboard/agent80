@@ -74,7 +74,7 @@ export const initialState: State = {
     configSizes: { userConfig: 32704, hardwareConfig: 64 },
     skipFirmwareUpgrade: false,
     statusBuffer: '',
-    udevRuleInfo: UdevRulesInfo.Unknown,
+    udevRuleInfo: UdevRulesInfo.Ok,
 };
 
 export function reducer(state = initialState, action: Action): State {
