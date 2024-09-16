@@ -312,9 +312,17 @@ export class UhkHidDevice {
                     this.logService.usb('[UhkHidDevice] USB[W]:', bufferToString(data).substr(3));
                     try {
                         keyboardDevice.write(data);
-                        keyboardDevice.close();
                     } catch (error) {
                         this.logService.misc('[UhkHidDevice] Reenumeration error. We hope it would not break the process', error);
+                    } finally {
+                        if (keyboardDevice) {
+                            try {
+                                this.logService.misc('[UhkHidDevice] closing normal keyboard after reenumeration');
+                                keyboardDevice.close();
+                            } catch (error) {
+                                this.logService.misc("[UhkHidDevice] can't normal keyboard after reenumeration", error);
+                            }
+                        }
                     }
                     jumped = true;
                 } else {
