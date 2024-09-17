@@ -157,7 +157,7 @@ export const waitForDevices = async (vidPidPairs: VidPidPair[]): Promise<void> =
             .some(dev => vidPidPairs.some(vidPid => vidPid.vid === dev.vendorId && vidPid.pid === dev.productId));
 
         if (isAvailable) {
-            await snooze(1000);
+            await snooze(5000);
 
             return;
         }
