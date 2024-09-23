@@ -21,7 +21,11 @@ export function errorHandler(error) {
         const devices = getUhkDevices();
         for(const device of devices) {
             if (isUhkCommunicationInterface(device)) {
-                console.log(`vid: ${device.vendorId} pid: ${device.productId} interface: ${device.interface} serial number: ${device.serialNumber}`);
+                const selector = device.serialNumber
+                    ? `--serial-number=${device.serialNumber}`
+                    : `--vid=${device.vendorId} --pid=${device.productId} --usb-interface=${device.interface}`;
+
+                console.log(`vid: ${device.vendorId} pid: ${device.productId} interface: ${device.interface} serial number: ${device.serialNumber} selector: ${selector}`);
             }
         }
     }
