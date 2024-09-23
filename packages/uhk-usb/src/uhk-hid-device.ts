@@ -43,7 +43,8 @@ import {
     getDeviceEnumerateVidPidPairs,
     getNumberOfConnectedDevices,
     getUhkDevices,
-    usbDeviceJsonFormatter
+    usbDeviceJsonFormatter,
+    validateConnectedDevices,
 } from './utils/index.js';
 
 export const BOOTLOADER_TIMEOUT_MS = 5000;
@@ -483,6 +484,8 @@ export class UhkHidDevice {
         try {
             const devs = this.getUhkDevices();
             this.listAvailableDevices(devs);
+
+            validateConnectedDevices(this.options);
 
             this._deviceInfo = this.options.vid || this.options['serial-number']
                 ? devs.find(findDeviceByDeviceIdentifier(this.options))
