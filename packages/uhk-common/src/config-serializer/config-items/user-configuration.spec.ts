@@ -9,7 +9,7 @@ describe('user-configuration', () => {
     it('should transform an empty config', () => {
         jsonTester({
             userConfigMajorVersion: 8,
-            userConfigMinorVersion: 0,
+            userConfigMinorVersion: 1,
             userConfigPatchVersion: 0,
             deviceName: 'My UHK',
             doubleTapSwitchLayerTimeout: 250,
@@ -53,6 +53,96 @@ describe('user-configuration', () => {
             displayFadeOutBatteryTimeout: 0,
             keyBacklightFadeOutTimeout: 0,
             keyBacklightFadeOutBatteryTimeout: 0,
+            deviceTargets: [
+                {
+                    type: 'UsbRight',
+                    name: 'My PC',
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+            ],
             moduleConfigurations: [
                 {
                     id: 'KeyClusterLeft',

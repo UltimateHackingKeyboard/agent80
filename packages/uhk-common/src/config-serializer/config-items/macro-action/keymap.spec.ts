@@ -80,7 +80,7 @@ describe('keymap', () => {
         };
         const expectedJsonConfig = {
             userConfigMajorVersion: 8,
-            userConfigMinorVersion: 0,
+            userConfigMinorVersion: 1,
             userConfigPatchVersion: 0,
             deviceName: 'My UHK',
             doubleTapSwitchLayerTimeout: 250,
@@ -124,6 +124,96 @@ describe('keymap', () => {
             displayFadeOutBatteryTimeout: 0,
             keyBacklightFadeOutTimeout: 0,
             keyBacklightFadeOutBatteryTimeout: 0,
+            deviceTargets: [
+                {
+                    type: 'UsbRight',
+                    name: 'My PC',
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+            ],
             moduleConfigurations: [
                 {
                     id: 'KeyClusterLeft',
@@ -365,7 +455,7 @@ describe('keymap', () => {
         };
         const expectedJsonConfig = {
             userConfigMajorVersion: 8,
-            userConfigMinorVersion: 0,
+            userConfigMinorVersion: 1,
             userConfigPatchVersion: 0,
             deviceName: 'My UHK',
             doubleTapSwitchLayerTimeout: 250,
@@ -409,6 +499,96 @@ describe('keymap', () => {
             displayFadeOutBatteryTimeout: 0,
             keyBacklightFadeOutTimeout: 0,
             keyBacklightFadeOutBatteryTimeout: 0,
+            deviceTargets: [
+                {
+                    type: 'UsbRight',
+                    name: 'My PC',
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+                {
+                    type: 'Empty',
+                    name: ''
+                },
+            ],
             moduleConfigurations: [
                 {
                     id: 'KeyClusterLeft',

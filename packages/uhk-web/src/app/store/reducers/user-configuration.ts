@@ -1,6 +1,7 @@
 import {
     BacklightingMode,
     Constants,
+    DeviceTarget,
     getDefaultHalvesInfo,
     HalvesInfo,
     initBacklightingColorPalette,
@@ -828,6 +829,38 @@ export function reducer(
             return state;
         }
 
+        case UserConfig.ActionTypes.RenameDeviceTarget: {
+            const payload = (action as UserConfig.RenameDeviceTargetAction).payload;
+            const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
+
+            userConfiguration.deviceTargets = userConfiguration.deviceTargets.map((deviceTarget, index) => {
+                if (index === payload.index) {
+                    const target = new DeviceTarget(deviceTarget);
+                    target.name = payload.newName;
+
+                    return target;
+                }
+
+                return deviceTarget;
+            });
+
+            return {
+                ...state,
+                userConfiguration,
+            };
+        }
+
+        case UserConfig.ActionTypes.ReorderDeviceTargets: {
+            const payload = (action as UserConfig.ReorderDeviceTargetsAction).payload;
+            const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
+            userConfiguration.deviceTargets = payload;
+
+            return {
+                ...state,
+                userConfiguration,
+            };
+        }
+
         case UserConfig.ActionTypes.SelectModuleConfiguration: {
             return {
                 ...state,
@@ -977,6 +1010,9 @@ export function reducer(
 export const getUserConfiguration = (state: State): UserConfiguration => state.userConfiguration;
 export const getKeymaps = (state: State): Keymap[] => state.userConfiguration.keymaps;
 export const getDefaultKeymap = (state: State): Keymap => state.userConfiguration.keymaps.find(keymap => keymap.isDefault);
+export const getDeviceTargets = (state: State): DeviceTarget[] => {
+    return state.userConfiguration.deviceTargets;
+};
 export const getSelectedKeymap = (state: State): Keymap => {
     if (state.selectedKeymapAbbr === undefined) {
         return getDefaultKeymap(state);

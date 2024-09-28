@@ -27,6 +27,7 @@ import {
     AdvancedSettingsPageComponent,
     DeviceConfigurationComponent,
     DeviceFirmwareComponent,
+    DeviceTargetsComponent,
     FunctionalBacklightColorComponent,
     MouseSpeedComponent,
     LEDSettingsComponent,
@@ -94,7 +95,14 @@ import { appRoutingProviders, routing } from './app.routes';
 import { UhkAgentIconComponent } from './components/uhk-icon/uhk-agent-icon.component';
 
 import { CancelableDirective, ExternalUrlDirective } from './directives';
-import { AsHexColorPipe, NewLineToBrPipe, SafeHtmlPipe, SafeStylePipe, SafeUrlPipe } from './pipes';
+import {
+    AsHexColorPipe,
+    DeviceTargetTypeLabelPipe,
+    NewLineToBrPipe,
+    SafeHtmlPipe,
+    SafeStylePipe,
+    SafeUrlPipe,
+} from './pipes';
 
 import { CaptureService } from './services/capture.service';
 import { MapperService } from './services/mapper.service';
@@ -163,6 +171,7 @@ import appInitFactory from './services/app-init-factory';
         AdvancedSettingsPageComponent,
         AsHexColorPipe,
         BackToComponent,
+        DeviceTargetTypeLabelPipe,
         NewLineToBrPipe,
         SafeHtmlPipe,
         MainAppComponent,
@@ -170,6 +179,7 @@ import appInitFactory from './services/app-init-factory';
         CircleTooltipComponent,
         DeviceConfigurationComponent,
         DeviceFirmwareComponent,
+        DeviceTargetsComponent,
         FadeTimeoutSliderComponent,
         FirmwareFileUploadComponent,
         FirmwareUpgradePanelComponent,

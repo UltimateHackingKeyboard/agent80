@@ -1,0 +1,44 @@
+<h1>
+    <fa-icon [icon]="faBullseye"></fa-icon>
+    <span>Targets</span>
+</h1>
+
+<table class="table mt-4">
+    <thead>
+    <tr>
+        <th>
+        </th>
+        <th>
+            Type
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Name
+        </th>
+    </tr>
+    </thead>
+    <tbody [dragula]="dragAndDropGroup" [dragulaModel]="targets" (dragulaModelChange)="targetsReordered($event)">
+    <ng-container *ngFor="let target of targets; let index = index">
+    <tr *ngIf="target.type !== 0">
+        <td>
+            <i
+               class="uhk-icon uhk-icon-vertical-grip-icon movable"
+               aria-hidden="true"></i>
+        </td>
+        <td>
+            {{target.type | deviceTargetTypeLabelPipe}}
+        </td>
+        <td>
+            {{ target.address || '—' }}
+        </td>
+        <td>
+            <auto-grow-input [ngModel]="target.name"
+                             (ngModelChange)="renameTarget(index, $event)"
+           />
+        </td>
+    </tr>
+    </ng-container>
+    </tbody>
+</table>

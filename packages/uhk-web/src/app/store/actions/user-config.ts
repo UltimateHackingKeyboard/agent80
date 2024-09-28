@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { RgbColor } from 'colord';
-import { UserConfiguration, ConfigurationReply } from 'uhk-common';
+import { DeviceTarget, UserConfiguration, ConfigurationReply } from 'uhk-common';
 
 import {
     ApplyUserConfigurationFromFilePayload,
@@ -26,7 +26,9 @@ export enum ActionTypes {
     SaveUserConfigInBinFile = '[user-config] Save User Config in binary file',
     ToggleColorFromBacklightingColorPalette = '[user-config] toggle color from the backlighting color palette',
     LoadResetUserConfiguration = '[user-config] Load reset user configuration',
+    RenameDeviceTarget = '[user-config] Rename device target',
     RenameUserConfiguration = '[user-config] Rename user configuration',
+    ReorderDeviceTargets = '[user-config] Reorder device targets',
     SelectModuleConfiguration = '[user-config] Select module configuration',
     SetModuleConfigurationValue = '[user-config] Set module configuration value',
     SetUserConfigurationRgbValue = '[user-config] Set user configuration RGB value',
@@ -123,12 +125,27 @@ export class LoadResetUserConfigurationAction implements Action {
     }
 }
 
+export class RenameDeviceTargetAction implements Action {
+    type = ActionTypes.RenameDeviceTarget;
+
+    constructor(public payload: {index: number, newName: string}) {
+    }
+}
+
 export class RenameUserConfigurationAction implements Action {
     type = ActionTypes.RenameUserConfiguration;
 
     constructor(public payload: string) {
     }
 }
+
+export class ReorderDeviceTargetsAction implements Action {
+    type = ActionTypes.ReorderDeviceTargets;
+
+    constructor(public payload: DeviceTarget[]) {
+    }
+}
+
 
 export class SelectModuleConfigurationAction implements Action {
     type = ActionTypes.SelectModuleConfiguration;
@@ -190,7 +207,9 @@ export type Actions
     | SaveUserConfigInBinaryFileAction
     | LoadResetUserConfigurationAction
     | PreviewUserConfigurationAction
+    | RenameDeviceTargetAction
     | RenameUserConfigurationAction
+    | ReorderDeviceTargetsAction
     | SelectModuleConfigurationAction
     | SetModuleConfigurationValueAction
     | SetUserConfigurationRgbValueAction
