@@ -82,89 +82,67 @@
       "name": "My PC"
     },
     {
-      "type": "BLE",
-      "address": "12:34:56:78:90:ab",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     },
     {
-      "type": "Empty",
-      "name": ""
+      "type": "Empty"
     }
   ],
   "moduleConfigurations": [

@@ -41,7 +41,13 @@ export class DeviceTarget {
         if (this.hasAddress()) {
             this.address = jsonObject.address;
         }
-        this.name = jsonObject.name;
+
+        if (this.type === DeviceTargets.Empty) {
+            this.name = '';
+        }
+        else {
+            this.name = jsonObject.name;
+        }
 
         return this;
     }
@@ -59,7 +65,9 @@ export class DeviceTarget {
             this.address = address.map(x => x.toString(16)).join(ADDRESS_SEPARATOR);
         }
 
-        this.name = buffer.readString();
+        if (this.type !== DeviceTargets.Empty) {
+            this.name = buffer.readString();
+        }
 
         return this;
     }
@@ -67,11 +75,14 @@ export class DeviceTarget {
     toJsonObject(): any {
         const json: any = {
             type: DeviceTargets[this.type],
-            name: this.name,
         };
 
         if(this.hasAddress()) {
             json.address = this.address;
+        }
+
+        if (this.type !== DeviceTargets.Empty) {
+            json.name = this.name;
         }
 
         return json;
@@ -89,7 +100,9 @@ export class DeviceTarget {
             }
         }
 
-        buffer.writeString(this.name);
+        if (this.type !== DeviceTargets.Empty) {
+            buffer.writeString(this.name);
+        }
     }
 
     private hasAddress(): boolean {

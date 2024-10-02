@@ -130,88 +130,67 @@ describe('keymap', () => {
                     name: 'My PC',
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
             ],
             moduleConfigurations: [
@@ -505,88 +484,67 @@ describe('keymap', () => {
                     name: 'My PC',
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
             ],
             moduleConfigurations: [

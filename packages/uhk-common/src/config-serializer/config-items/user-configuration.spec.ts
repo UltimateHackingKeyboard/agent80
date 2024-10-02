@@ -59,88 +59,67 @@ describe('user-configuration', () => {
                     name: 'My PC',
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
                 {
-                    type: 'Empty',
-                    name: ''
+                    type: 'Empty'
                 },
             ],
             moduleConfigurations: [
