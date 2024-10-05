@@ -1,30 +1,30 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DragulaService } from '@ert78gb/ng2-dragula';
-import { faBullseye } from '@fortawesome/free-solid-svg-icons';
+import { faCircleNodes } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { DeviceTarget } from 'uhk-common';
+import { HostConnection } from 'uhk-common';
 
-import { RenameDeviceTargetAction, ReorderDeviceTargetsAction } from '../../../store/actions/user-config';
-import { AppState, getDeviceTargets } from '../../../store/index';
+import { RenameHostConnectionAction, ReorderHostConnectionsAction } from '../../../store/actions/user-config';
+import { AppState, getHostConnections } from '../../../store/index';
 
 @Component({
-    selector: 'device-targets',
-    templateUrl: './device-targets.component.html',
-    styleUrls: ['./device-targets.component.scss'],
+    selector: 'host-connections',
+    templateUrl: './host-connections.component.html',
+    styleUrls: ['./host-connections.component.scss'],
     host: {
         'class': 'container-fluid full-screen-component'
     },
 })
-export class DeviceTargetsComponent implements OnInit, OnDestroy {
-    faBullseye = faBullseye;
+export class HostConnectionsComponent implements OnInit, OnDestroy {
+    faCircleNodes = faCircleNodes;
 
-    targets: DeviceTarget[] = [] as DeviceTarget[];
+    hostConnections: HostConnection[] = [] as HostConnection[];
 
-    dragAndDropGroup = 'DEVICE_TARGET';
+    dragAndDropGroup = 'HOST_CONNECTION';
 
-    private targetsSubscription: Subscription;
+    private hostConnectionsSubscription: Subscription;
 
     constructor(private dragulaService: DragulaService,
                 private cdRef: ChangeDetectorRef,
@@ -50,28 +50,28 @@ export class DeviceTargetsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.targetsSubscription = this.store.select(getDeviceTargets)
-            .subscribe(deviceTargets => {
-                this.targets = deviceTargets;
+        this.hostConnectionsSubscription = this.store.select(getHostConnections)
+            .subscribe(hostConnections => {
+                this.hostConnections = hostConnections;
                 this.cdRef.markForCheck();
             });
     }
 
     ngOnDestroy(): void {
         this.dragulaService.destroy(this.dragAndDropGroup);
-        if(this.targetsSubscription) {
-            this.targetsSubscription.unsubscribe();
+        if(this.hostConnectionsSubscription) {
+            this.hostConnectionsSubscription.unsubscribe();
         }
     }
 
-    renameTarget(index: number, newName: string): void {
-        this.store.dispatch(new RenameDeviceTargetAction({
+    renameHostConnection(index: number, newName: string): void {
+        this.store.dispatch(new RenameHostConnectionAction({
             index,
             newName,
         }));
     }
 
-    targetsReordered(deviceTargets: DeviceTarget[]): void {
-        this.store.dispatch(new ReorderDeviceTargetsAction(deviceTargets));
+    hostConnectionsReordered(deviceTargets: HostConnection[]): void {
+        this.store.dispatch(new ReorderHostConnectionsAction(deviceTargets));
     }
 }

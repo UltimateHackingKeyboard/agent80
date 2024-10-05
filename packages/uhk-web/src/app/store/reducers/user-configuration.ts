@@ -1,9 +1,9 @@
 import {
     BacklightingMode,
     Constants,
-    DeviceTarget,
     getDefaultHalvesInfo,
     HalvesInfo,
+    HostConnection,
     initBacklightingColorPalette,
     KeyAction,
     KeyActionHelper,
@@ -829,19 +829,19 @@ export function reducer(
             return state;
         }
 
-        case UserConfig.ActionTypes.RenameDeviceTarget: {
-            const payload = (action as UserConfig.RenameDeviceTargetAction).payload;
+        case UserConfig.ActionTypes.RenameHostConnection: {
+            const payload = (action as UserConfig.RenameHostConnectionAction).payload;
             const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
 
-            userConfiguration.deviceTargets = userConfiguration.deviceTargets.map((deviceTarget, index) => {
+            userConfiguration.hostConnections = userConfiguration.hostConnections.map((hostConnection, index) => {
                 if (index === payload.index) {
-                    const target = new DeviceTarget(deviceTarget);
-                    target.name = payload.newName;
+                    const connection = new HostConnection(hostConnection);
+                    connection.name = payload.newName;
 
-                    return target;
+                    return connection;
                 }
 
-                return deviceTarget;
+                return hostConnection;
             });
 
             return {
@@ -850,10 +850,10 @@ export function reducer(
             };
         }
 
-        case UserConfig.ActionTypes.ReorderDeviceTargets: {
-            const payload = (action as UserConfig.ReorderDeviceTargetsAction).payload;
+        case UserConfig.ActionTypes.ReorderHostConnections: {
+            const payload = (action as UserConfig.ReorderHostConnectionsAction).payload;
             const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
-            userConfiguration.deviceTargets = payload;
+            userConfiguration.hostConnections = payload;
 
             return {
                 ...state,
@@ -1010,8 +1010,8 @@ export function reducer(
 export const getUserConfiguration = (state: State): UserConfiguration => state.userConfiguration;
 export const getKeymaps = (state: State): Keymap[] => state.userConfiguration.keymaps;
 export const getDefaultKeymap = (state: State): Keymap => state.userConfiguration.keymaps.find(keymap => keymap.isDefault);
-export const getDeviceTargets = (state: State): DeviceTarget[] => {
-    return state.userConfiguration.deviceTargets;
+export const getHostConnections = (state: State): HostConnection[] => {
+    return state.userConfiguration.hostConnections;
 };
 export const getSelectedKeymap = (state: State): Keymap => {
     if (state.selectedKeymapAbbr === undefined) {

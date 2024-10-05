@@ -6,7 +6,7 @@ import { DeviceFirmwareComponent } from './firmware/device-firmware.component';
 import { MouseSpeedComponent } from './mouse-speed/mouse-speed.component';
 import { LEDSettingsComponent } from './led-settings/led-settings.component';
 import { RestoreConfigurationComponent } from './restore-configuration/restore-configuration.component';
-import { DeviceTargetsComponent } from './targets/device-targets.component';
+import { HostConnectionsComponent } from './host-connections/host-connections.component';
 import { TypingBehaviorPage } from './typing-behavior-page/typing-behavior-page.component';
 
 export const deviceRoutes: Routes = [
@@ -43,8 +43,8 @@ export const deviceRoutes: Routes = [
                 component: RestoreConfigurationComponent
             },
             {
-                path: 'targets',
-                component: DeviceTargetsComponent
+                path: 'host-connections',
+                component: HostConnectionsComponent
             },
             {
                 path: 'typing-behavior',

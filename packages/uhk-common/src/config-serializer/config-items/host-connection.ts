@@ -2,7 +2,7 @@ import { assertEnum } from '../assert.js';
 import { UhkBuffer } from '../uhk-buffer.js';
 import { SerialisationInfo } from './serialisation-info.js';
 
-export enum DeviceTargets {
+export enum HostConnections {
     Empty = 0,
     UsbRight = 1,
     UsbLeft = 2,
@@ -10,25 +10,25 @@ export enum DeviceTargets {
     Dongle = 4,
 }
 
-export const DEVICE_TARGETS_LABELS: Readonly<Record<DeviceTargets, string>> = Object.freeze({
-    [DeviceTargets.Empty]: 'Empty',
-    [DeviceTargets.UsbRight]: 'USB Right',
-    [DeviceTargets.UsbLeft]: 'USB Left',
-    [DeviceTargets.BLE]: 'BLE',
-    [DeviceTargets.Dongle]: 'Dongle',
+export const HOST_CONNECTION_LABELS: Readonly<Record<HostConnections, string>> = Object.freeze({
+    [HostConnections.Empty]: 'Empty',
+    [HostConnections.UsbRight]: 'USB Right',
+    [HostConnections.UsbLeft]: 'USB Left',
+    [HostConnections.BLE]: 'BLE',
+    [HostConnections.Dongle]: 'Dongle',
 });
 
-export const DEVICE_TARGET_COUNT_MAX = 22;
+export const HOST_CONNECTION_COUNT_MAX = 22;
 const BLE_ADDRESS_LENGTH = 6;
 const ADDRESS_SEPARATOR = ':';
 
-export class DeviceTarget {
-    @assertEnum(DeviceTargets) type: DeviceTargets;
+export class HostConnection {
+    @assertEnum(HostConnections) type: HostConnections;
 
     address: string;
     name: string;
 
-    constructor(other?: DeviceTarget) {
+    constructor(other?: HostConnection) {
         if (other) {
             this.type = other.type;
             this.address = other.address;
@@ -36,13 +36,13 @@ export class DeviceTarget {
         }
     }
 
-    fromJsonObject(jsonObject: any, serialisationInfo: SerialisationInfo): DeviceTarget {
-        this.type = DeviceTargets[<string>jsonObject.type];
+    fromJsonObject(jsonObject: any, serialisationInfo: SerialisationInfo): HostConnection {
+        this.type = HostConnections[<string>jsonObject.type];
         if (this.hasAddress()) {
             this.address = jsonObject.address;
         }
 
-        if (this.type === DeviceTargets.Empty) {
+        if (this.type === HostConnections.Empty) {
             this.name = '';
         }
         else {
@@ -52,7 +52,7 @@ export class DeviceTarget {
         return this;
     }
 
-    fromBinary(buffer: UhkBuffer, serialisationInfo: SerialisationInfo): DeviceTarget {
+    fromBinary(buffer: UhkBuffer, serialisationInfo: SerialisationInfo): HostConnection {
         this.type = buffer.readUInt8();
 
         if (this.hasAddress()) {
@@ -65,7 +65,7 @@ export class DeviceTarget {
             this.address = address.map(x => x.toString(16)).join(ADDRESS_SEPARATOR);
         }
 
-        if (this.type !== DeviceTargets.Empty) {
+        if (this.type !== HostConnections.Empty) {
             this.name = buffer.readString();
         }
 
@@ -74,14 +74,14 @@ export class DeviceTarget {
 
     toJsonObject(): any {
         const json: any = {
-            type: DeviceTargets[this.type],
+            type: HostConnections[this.type],
         };
 
         if(this.hasAddress()) {
             json.address = this.address;
         }
 
-        if (this.type !== DeviceTargets.Empty) {
+        if (this.type !== HostConnections.Empty) {
             json.name = this.name;
         }
 
@@ -100,36 +100,36 @@ export class DeviceTarget {
             }
         }
 
-        if (this.type !== DeviceTargets.Empty) {
+        if (this.type !== HostConnections.Empty) {
             buffer.writeString(this.name);
         }
     }
 
     private hasAddress(): boolean {
-        return this.type === DeviceTargets.BLE || this.type === DeviceTargets.Dongle;
+        return this.type === HostConnections.BLE || this.type === HostConnections.Dongle;
     }
 }
 
-export function emptyDeviceTarget(): DeviceTarget {
-    const deviceTarget = new DeviceTarget();
-    deviceTarget.type = DeviceTargets.Empty;
-    deviceTarget.name = '';
+export function emptyHostConnection(): HostConnection {
+    const hostConnection = new HostConnection();
+    hostConnection.type = HostConnections.Empty;
+    hostConnection.name = '';
 
-    return deviceTarget;
+    return hostConnection;
 }
 
-export function defaultDeviceTargets(): DeviceTarget[] {
-    const usbRightDeviceTarget = new DeviceTarget();
-    usbRightDeviceTarget.type = DeviceTargets.UsbRight;
-    usbRightDeviceTarget.name = 'My PC';
+export function defaultHostConnections(): HostConnection[] {
+    const usbHostConnection = new HostConnection();
+    usbHostConnection.type = HostConnections.UsbRight;
+    usbHostConnection.name = 'My PC';
 
-    const deviceTargets: DeviceTarget[] = [
-        usbRightDeviceTarget
+    const hostConnections: HostConnection[] = [
+        usbHostConnection
     ];
 
-    for (let i = deviceTargets.length; i < DEVICE_TARGET_COUNT_MAX; i++) {
-        deviceTargets.push(emptyDeviceTarget());
+    for (let i = hostConnections.length; i < HOST_CONNECTION_COUNT_MAX; i++) {
+        hostConnections.push(emptyHostConnection());
     }
 
-    return deviceTargets;
+    return hostConnections;
 }

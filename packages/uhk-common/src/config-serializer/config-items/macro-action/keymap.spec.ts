@@ -124,7 +124,7 @@ describe('keymap', () => {
             displayFadeOutBatteryTimeout: 0,
             keyBacklightFadeOutTimeout: 0,
             keyBacklightFadeOutBatteryTimeout: 0,
-            deviceTargets: [
+            hostConnections: [
                 {
                     type: 'UsbRight',
                     name: 'My PC',
@@ -478,7 +478,7 @@ describe('keymap', () => {
             displayFadeOutBatteryTimeout: 0,
             keyBacklightFadeOutTimeout: 0,
             keyBacklightFadeOutBatteryTimeout: 0,
-            deviceTargets: [
+            hostConnections: [
                 {
                     type: 'UsbRight',
                     name: 'My PC',

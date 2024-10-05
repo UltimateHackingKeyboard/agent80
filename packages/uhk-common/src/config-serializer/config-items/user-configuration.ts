@@ -5,10 +5,10 @@ import { ConfigSerializer } from '../config-serializer.js';
 import { UhkBuffer } from '../uhk-buffer.js';
 import { BacklightingMode } from './backlighting-mode.js';
 import {
-    defaultDeviceTargets,
-    DEVICE_TARGET_COUNT_MAX,
-    DeviceTarget,
-} from './device-target.js';
+    defaultHostConnections,
+    HOST_CONNECTION_COUNT_MAX,
+    HostConnection,
+} from './host-connection.js';
 import { KeystrokeAction, NoneAction } from './key-action/index.js';
 import { Keymap } from './keymap.js';
 import { LayerName } from './layer-name.js';
@@ -143,7 +143,7 @@ export class UserConfiguration implements MouseSpeedConfiguration {
 
     @assertUInt16 keystrokeDelay: number;
 
-    deviceTargets: DeviceTarget[] = [];
+    hostConnections: HostConnection[] = [];
 
     moduleConfigurations: ModuleConfiguration[] = [];
 
@@ -157,7 +157,7 @@ export class UserConfiguration implements MouseSpeedConfiguration {
 
     clone(): UserConfiguration {
         const userConfig = Object.assign(new UserConfiguration(), this);
-        userConfig.deviceTargets = userConfig.deviceTargets.map(deviceTarget => new DeviceTarget(deviceTarget));
+        userConfig.hostConnections = userConfig.hostConnections.map(hostConnection => new HostConnection(hostConnection));
         userConfig.keymaps = userConfig.keymaps.map(keymap => new Keymap(keymap));
         userConfig.macros = userConfig.macros.map(macro => new Macro(macro));
         userConfig.moduleConfigurations = userConfig.moduleConfigurations.map(module => new ModuleConfiguration(module));
@@ -319,7 +319,7 @@ export class UserConfiguration implements MouseSpeedConfiguration {
             keyBacklightFadeOutTimeout: this.keyBacklightFadeOutTimeout,
             keyBacklightFadeOutBatteryTimeout: this.keyBacklightFadeOutBatteryTimeout,
 
-            deviceTargets: this.deviceTargets.map(deviceTarget => deviceTarget.toJsonObject()),
+            hostConnections: this.hostConnections.map(hostConnection => hostConnection.toJsonObject()),
             moduleConfigurations: this.moduleConfigurations.map(moduleConfiguration => moduleConfiguration.toJsonObject()),
             keymaps: this.keymaps.map(keymap => keymap.toJsonObject(this.getSerialisationInfo(), this.macros)),
             macros: this.macros.map(macro => macro.toJsonObject())
@@ -376,9 +376,9 @@ export class UserConfiguration implements MouseSpeedConfiguration {
         buffer.writeUInt16(this.keyBacklightFadeOutTimeout);
         buffer.writeUInt16(this.keyBacklightFadeOutBatteryTimeout);
 
-        for(let i = 0; i < DEVICE_TARGET_COUNT_MAX; i++) {
-            const target = this.deviceTargets[i];
-            target.toBinary(buffer);
+        for(let i = 0; i < HOST_CONNECTION_COUNT_MAX; i++) {
+            const hostConnection = this.hostConnections[i];
+            hostConnection.toBinary(buffer);
         }
         buffer.writeArray(this.moduleConfigurations);
         buffer.writeArray(this.macros);
@@ -629,9 +629,9 @@ export class UserConfiguration implements MouseSpeedConfiguration {
         const serialisationInfo = this.getSerialisationInfo();
 
         if (this.userConfigMinorVersion >= 1) {
-            this.deviceTargets = [];
-            for(let i = 0; i < DEVICE_TARGET_COUNT_MAX; i++) {
-                this.deviceTargets.push(new DeviceTarget().fromBinary(buffer, serialisationInfo));
+            this.hostConnections = [];
+            for(let i = 0; i < HOST_CONNECTION_COUNT_MAX; i++) {
+                this.hostConnections.push(new HostConnection().fromBinary(buffer, serialisationInfo));
             }
         }
 
@@ -827,8 +827,8 @@ export class UserConfiguration implements MouseSpeedConfiguration {
         const serialisationInfo = this.getSerialisationInfo();
 
         if (this.userConfigMinorVersion >= 1) {
-            this.deviceTargets = jsonObject.deviceTargets.map((deviceTarget: any) => {
-                return new DeviceTarget().fromJsonObject(deviceTarget, serialisationInfo);
+            this.hostConnections = jsonObject.hostConnections.map((hostConnection: any) => {
+                return new HostConnection().fromJsonObject(hostConnection, serialisationInfo);
             });
         }
 
@@ -953,7 +953,7 @@ export class UserConfiguration implements MouseSpeedConfiguration {
         }
 
         this.userConfigMinorVersion = 1;
-        this.deviceTargets = defaultDeviceTargets();
+        this.hostConnections = defaultHostConnections();
 
         return true;
     }

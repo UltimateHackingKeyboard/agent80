@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { RgbColor } from 'colord';
-import { DeviceTarget, UserConfiguration, ConfigurationReply } from 'uhk-common';
+import { HostConnection, UserConfiguration, ConfigurationReply } from 'uhk-common';
 
 import {
     ApplyUserConfigurationFromFilePayload,
@@ -26,9 +26,9 @@ export enum ActionTypes {
     SaveUserConfigInBinFile = '[user-config] Save User Config in binary file',
     ToggleColorFromBacklightingColorPalette = '[user-config] toggle color from the backlighting color palette',
     LoadResetUserConfiguration = '[user-config] Load reset user configuration',
-    RenameDeviceTarget = '[user-config] Rename device target',
+    RenameHostConnection = '[user-config] Rename host connection',
     RenameUserConfiguration = '[user-config] Rename user configuration',
-    ReorderDeviceTargets = '[user-config] Reorder device targets',
+    ReorderHostConnections = '[user-config] Reorder host connections',
     SelectModuleConfiguration = '[user-config] Select module configuration',
     SetModuleConfigurationValue = '[user-config] Set module configuration value',
     SetUserConfigurationRgbValue = '[user-config] Set user configuration RGB value',
@@ -125,8 +125,8 @@ export class LoadResetUserConfigurationAction implements Action {
     }
 }
 
-export class RenameDeviceTargetAction implements Action {
-    type = ActionTypes.RenameDeviceTarget;
+export class RenameHostConnectionAction implements Action {
+    type = ActionTypes.RenameHostConnection;
 
     constructor(public payload: {index: number, newName: string}) {
     }
@@ -139,10 +139,10 @@ export class RenameUserConfigurationAction implements Action {
     }
 }
 
-export class ReorderDeviceTargetsAction implements Action {
-    type = ActionTypes.ReorderDeviceTargets;
+export class ReorderHostConnectionsAction implements Action {
+    type = ActionTypes.ReorderHostConnections;
 
-    constructor(public payload: DeviceTarget[]) {
+    constructor(public payload: HostConnection[]) {
     }
 }
 
@@ -207,9 +207,9 @@ export type Actions
     | SaveUserConfigInBinaryFileAction
     | LoadResetUserConfigurationAction
     | PreviewUserConfigurationAction
-    | RenameDeviceTargetAction
+    | RenameHostConnectionAction
     | RenameUserConfigurationAction
-    | ReorderDeviceTargetsAction
+    | ReorderHostConnectionsAction
     | SelectModuleConfigurationAction
     | SetModuleConfigurationValueAction
     | SetUserConfigurationRgbValueAction
