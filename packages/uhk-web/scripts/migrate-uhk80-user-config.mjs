@@ -121,6 +121,7 @@ for (const keymap of userConfig.keymaps) {
                 module.keyActions[34] = KeyActionHelper.fromKeyAction(originalModule.keyActions[35]);
                 module.keyActions[35] = KeyActionHelper.fromKeyAction(originalModule.keyActions[36]);
                 module.keyActions[36] = KeyActionHelper.fromKeyAction(originalModule.keyActions[37]);
+                module.keyActions[37] = KeyActionHelper.fromKeyAction(originalModule.keyActions[38]);
                 module.keyActions[38] = KeyActionHelper.fromKeyAction(originalModule.keyActions[39]);
                 module.keyActions[39] = KeyActionHelper.fromKeyAction(originalModule.keyActions[40]);
 

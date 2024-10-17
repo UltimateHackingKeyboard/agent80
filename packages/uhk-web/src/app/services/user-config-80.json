@@ -725,7 +725,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -1133,7 +1137,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -1474,7 +1480,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -1808,7 +1816,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -2113,7 +2123,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -2610,7 +2622,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -3024,7 +3040,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -3364,7 +3382,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -3698,7 +3718,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -4003,7 +4025,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -4500,7 +4524,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -4908,7 +4936,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -5249,7 +5279,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -5583,7 +5615,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -5888,7 +5922,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -6385,7 +6421,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -6799,7 +6839,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -7139,7 +7181,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -7473,7 +7517,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -7778,7 +7824,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -8275,7 +8323,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -8683,7 +8735,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -9024,7 +9078,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -9358,7 +9414,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -9663,7 +9721,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -10160,7 +10220,11 @@
                   "type": "basic",
                   "scancode": 60
                 },
-                null,
+                {
+                  "keyActionType": "keystroke",
+                  "type": "basic",
+                  "scancode": 61
+                },
                 {
                   "keyActionType": "keystroke",
                   "type": "basic",
@@ -10574,7 +10638,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -10914,7 +10980,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -11248,7 +11316,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
@@ -11553,7 +11623,9 @@
                 {
                   "keyActionType": "none"
                 },
-                null,
+                {
+                  "keyActionType": "none"
+                },
                 {
                   "keyActionType": "none"
                 },
