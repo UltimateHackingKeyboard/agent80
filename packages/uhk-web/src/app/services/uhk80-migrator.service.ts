@@ -130,15 +130,13 @@ export class Uhk80MigratorService implements OnDestroy {
         for (const module of uhk60Layer.modules) {
             const uhk80Module = uhk80Layer.modules.find(x => x.id === module.id);
 
-            if (module.id === 0) {
-                for (let i = UHK_60_RIGHT_MAX_KEY_ACTION_COUNT; i < uhk80Module.keyActions.length; i++) {
-                    const keyAction = uhk80Module.keyActions[i];
-                    module.keyActions[i] = KeyActionHelper.fromKeyAction(keyAction);
-                }
-            }
-            // left half
-            else if (module.id === 1) {
-                for (let i = UHK_60_LEFT_MAX_KEY_ACTION_COUNT; i < uhk80Module.keyActions.length; i++) {
+            // right and left halves
+            if (module.id === 0 || module.id === 1) {
+                let i = module.id === 0
+                    ? UHK_60_RIGHT_MAX_KEY_ACTION_COUNT
+                    : UHK_60_LEFT_MAX_KEY_ACTION_COUNT;
+
+                for (; i < uhk80Module.keyActions.length; i++) {
                     const keyAction = uhk80Module.keyActions[i];
                     module.keyActions[i] = KeyActionHelper.fromKeyAction(keyAction);
                 }
@@ -168,27 +166,15 @@ export class Uhk80MigratorService implements OnDestroy {
         for (const keymap of userConfig.keymaps) {
             for (const layer of keymap.layers) {
                 for (const module of layer.modules) {
-                    if (module.id === 0) {
-                        for (let i = UHK_60_RIGHT_MAX_KEY_ACTION_COUNT; i < module.keyActions.length; i++) {
+                    // right and left halves
+                    if (module.id === 0 || module.id === 1) {
+                        let i = module.id === 0
+                            ? UHK_60_RIGHT_MAX_KEY_ACTION_COUNT
+                            : UHK_60_LEFT_MAX_KEY_ACTION_COUNT;
+
+                        for (; i < module.keyActions.length; i++) {
                             const keyAction = module.keyActions[i];
                             if (keyAction !== null && keyAction !== undefined) {
-                                return true;
-                            }
-                        }
-                    }
-                    // left half
-                    else if (module.id === 1) {
-                        for (let i = UHK_60_LEFT_MAX_KEY_ACTION_COUNT; i < module.keyActions.length; i++) {
-                            const keyAction = module.keyActions[i];
-
-                            // the first excess key of the old UHK60 user config was filled with NoneAction
-                            // so it is an exception
-                            if (i === UHK_60_LEFT_MAX_KEY_ACTION_COUNT) {
-                                if (keyAction !== null && keyAction !== undefined && !(keyAction instanceof NoneAction)) {
-                                    return true;
-                                }
-                            }
-                            else if (keyAction !== null && keyAction !== undefined) {
                                 return true;
                             }
                         }
