@@ -121,11 +121,11 @@ export class SvgModuleProviderService implements OnDestroy {
     }
 
     private getLeftModule(layout = KeyboardLayout.ANSI): SvgModule {
-        // if (layout === KeyboardLayout.ISO) {
-        return this.isoLeft;
-        // }
+        if (layout === KeyboardLayout.ISO) {
+            return this.isoLeft;
+        }
 
-        // return this.ansiLeft;
+        return this.ansiLeft;
     }
 
     private getKeyClusterLeft(): SvgModule {
