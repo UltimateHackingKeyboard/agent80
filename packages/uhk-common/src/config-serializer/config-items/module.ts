@@ -69,7 +69,8 @@ export class Module {
                 if (keyAction && (macros || !(keyAction instanceof PlayMacroAction || keyAction instanceof SwitchKeymapAction))) {
                     return keyAction.toJsonObject(serialisationInfo, macros);
                 }
-                return new NoneAction();
+
+                return new NoneAction().toJsonObject(serialisationInfo);
             })
         };
     }

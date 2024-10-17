@@ -980,7 +980,6 @@ export class UserConfiguration implements MouseSpeedConfiguration {
                 layer.modules = layer.modules.map(originalModule => {
                     // right half
                     if (originalModule.id === 0) {
-                        console.log('migration module 0');
                         const module = new Module();
                         module.id = originalModule.id;
 

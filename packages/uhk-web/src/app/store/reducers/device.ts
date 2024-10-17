@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { UHK_80_DEVICE } from 'uhk-common';
 import {
     BackupUserConfiguration,
     BackupUserConfigurationInfo,
@@ -340,7 +341,7 @@ export const deviceUiState = (state: State): DeviceUiStates | undefined => {
     }
 };
 
-export const getConnectedDevice = (state: State) => state.connectedDevice;
+export const getConnectedDevice = (state: State) => UHK_80_DEVICE;
 export const getSkipFirmwareUpgrade = (state: State) => state.skipFirmwareUpgrade;
 export const isKeyboardLayoutChanging = (state: State) => state.isKeyboardLayoutChanging;
 export const keyboardHalvesAlwaysJoined = (state: State) => state.keyboardHalvesAlwaysJoined;
