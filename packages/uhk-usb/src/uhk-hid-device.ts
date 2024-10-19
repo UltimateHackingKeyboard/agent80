@@ -382,7 +382,7 @@ export class UhkHidDevice {
         return {
             isEepromBusy: buffer[1] !== 0,
             isMacroStatusDirty: buffer[7] !== 0,
-            areHalvesMerged: buffer[2] !== 0,
+            areHalvesMerged: (buffer[2] & 0x1) !== 0,
             isLeftHalfConnected: buffer[3] !== 0,
             activeLayerNumber,
             activeLayerName: LAYER_NUMBER_TO_STRING[activeLayerNumber],
