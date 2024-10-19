@@ -19,8 +19,12 @@ export const HOST_CONNECTION_LABELS: Readonly<Record<HostConnections, string>> =
 });
 
 export const HOST_CONNECTION_COUNT_MAX = 22;
-const BLE_ADDRESS_LENGTH = 6;
-const ADDRESS_SEPARATOR = ':';
+export const BLE_ADDRESS_LENGTH = 6;
+const BLE_ADDRESS_SEPARATOR = ':';
+
+export function convertBleAddressArrayToString(address: number[]): string {
+    return address.map(x => x.toString(16)).join(BLE_ADDRESS_SEPARATOR);
+}
 
 export class HostConnection {
     @assertEnum(HostConnections) type: HostConnections;
@@ -81,7 +85,7 @@ export class HostConnection {
         buffer.writeUInt8(this.type);
 
         if (this.hasAddress()) {
-            const address = this.address.split(ADDRESS_SEPARATOR);
+            const address = this.address.split(BLE_ADDRESS_SEPARATOR);
 
             for(let i = 0; i < BLE_ADDRESS_LENGTH; i++) {
                 const segment = Number.parseInt(address[i], 16) || 0;
@@ -105,7 +109,7 @@ export class HostConnection {
                 address.push(buffer.readUInt8());
             }
 
-            this.address = address.map(x => x.toString(16)).join(ADDRESS_SEPARATOR);
+            this.address = convertBleAddressArrayToString(address);
         }
 
         if (this.type !== HostConnections.Empty) {

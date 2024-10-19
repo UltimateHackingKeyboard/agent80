@@ -82,6 +82,19 @@ export enum ModulePropertyId {
     FirmwareChecksum = 3
 }
 
+export enum PairIds {
+    left = 0,
+    Right = 1,
+    Dongle = 2,
+    Hid = 3,
+}
+
+export enum PairingStatuses {
+    InProgress = 0,
+    Success = 1,
+    Failed = 2,
+}
+
 export enum UsbVariables {
     testSwitches = 0,
     testUsbStack = 1,
