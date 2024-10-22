@@ -17,6 +17,7 @@ export * from './get-number-of-connected-devices.js';
 export * from './get-package-json-from-path-async.js';
 export * from './get-uhk-devices.js';
 export * from './get-uhk-dongles.js';
+export * from './is-dongle-communication-device.js';
 export * from './is-uhk-device-connected.js';
 export * from './snooze.js';
 export * from './validate-connected-devices.js';

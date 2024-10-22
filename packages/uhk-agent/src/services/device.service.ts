@@ -3,6 +3,7 @@ import { cloneDeep, isEqual } from 'lodash';
 import {
     BackupUserConfigurationInfo,
     ChangeKeyboardLayoutIpcResponse,
+    convertBleAddressArrayToString,
     CommandLineArgs,
     ConfigurationReply,
     DeviceConnectionState,
@@ -47,6 +48,7 @@ import {
     DevicePropertyIds,
     getCurrentUhkDeviceProduct,
     getCurrentUhkDeviceProductByBootloaderId,
+    getCurrentUhkDongleHID,
     getDeviceFirmwarePath,
     getFirmwarePackageJson,
     getModuleFirmwarePath,
@@ -152,6 +154,15 @@ export class DeviceService {
         });
 
         ipcMain.on(IpcEvents.device.startConnectionPoller, this.startPollUhkDevice.bind(this));
+
+        ipcMain.on(IpcEvents.device.startDonglePairing, (...args: any[]) => {
+            this.queueManager.add({
+                method: this.startDonglePairing,
+                bind: this,
+                params: args,
+                asynchronous: true
+            });
+        });
 
         ipcMain.on(IpcEvents.device.recoveryDevice, (...args: any[]) => {
             this.queueManager.add({
@@ -614,6 +625,25 @@ export class DeviceService {
         }
     }
 
+    public async startDonglePairing(event: Electron.IpcMainEvent): Promise<void> {
+        this.logService.misc('[DeviceService] start Dongle pairing');
+        try {
+            await this.stopPollUhkDevice();
+            const dongleHid = await getCurrentUhkDongleHID();
+            const dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
+            const result = await this.operations.pairToDongle(dongleUhkDevice);
+            this.logService.misc('[DeviceService] Dongle pairing success');
+            event.sender.send(IpcEvents.device.donglePairingSuccess, result.pairAddress);
+        }
+        catch(error) {
+            this.logService.error('[DeviceService] Dongle pairing failed', error);
+            event.sender.send(IpcEvents.device.donglePairingFailed, error.message);
+        }
+        finally {
+            this.startPollUhkDevice();
+        }
+    }
+
     public startPollUhkDevice(): void {
         this.logService.misc('[DeviceService] start poll UHK Device');
         this._pollerAllowed = true;
@@ -705,6 +735,28 @@ export class DeviceService {
                         if (state.hasPermission && state.communicationInterfaceAvailable) {
                             state.hardwareModules = await this.getHardwareModules(false);
                             deviceProtocolVersion = state.hardwareModules.rightModuleInfo.deviceProtocolVersion;
+                            if (await this.device.isDeviceSupportWirelessUSBCommands()) {
+                                state.bleAddress = convertBleAddressArrayToString(await this.device.getBleAddress());
+                            }
+
+                            if (!state.dongle.multiDevice && state.dongle.serialNumber && state.dongle.serialNumber !== savedState?.dongle?.serialNumber) {
+                                const dongle = await getCurrentUhkDongleHID();
+                                let dongleUhkDevice: UhkHidDevice;
+                                try {
+                                    dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongle);
+                                    state.dongle.bleAddress = convertBleAddressArrayToString(await dongleUhkDevice.getBleAddress());
+                                    state.dongle.keyboardBleAddress = convertBleAddressArrayToString(await dongleUhkDevice.getPairedRightPairBleAddress());
+                                }
+                                catch (err) {
+                                    this.logService.error("Can't query Dongle BLE Addresses", err);
+                                }
+                                finally {
+                                    if(dongleUhkDevice) {
+                                        dongleUhkDevice.close();
+                                    }
+                                }
+                            }
+
                             this._checkStatusBuffer = true;
                         } else {
                             deviceProtocolVersion = undefined;
@@ -719,7 +771,7 @@ export class DeviceService {
 
                         savedState = newState;
 
-                        this.logService.misc('[DeviceService] Device connection state changed to:', state);
+                        this.logService.misc('[DeviceService] Device connection state changed to:', JSON.stringify(state, null, 2));
                     }
 
                     if (state.isMacroStatusDirty) {

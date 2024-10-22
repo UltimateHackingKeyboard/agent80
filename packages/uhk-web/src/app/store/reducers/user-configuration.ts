@@ -1,3 +1,4 @@
+import { HostConnections } from 'uhk-common';
 import {
     BacklightingMode,
     Constants,
@@ -14,9 +15,9 @@ import {
     LeftSlotModules,
     Macro,
     MacroActionHelper,
+    MODIFIER_LAYER_NAMES,
     Module,
     ModuleConfiguration,
-    MODIFIER_LAYER_NAMES,
     MODULES_NONE_CONFIGS,
     NoneAction,
     PlayMacroAction,
@@ -47,6 +48,7 @@ import {
 import * as AppActions from '../actions/app';
 import * as DeviceActions from '../actions/device';
 import * as Device from '../actions/device';
+import * as DonglePairing from '../actions/dongle-pairing.action';
 import * as KeymapActions from '../actions/keymap';
 import * as MacroActions from '../actions/macro';
 import * as UserConfig from '../actions/user-config';
@@ -85,7 +87,7 @@ export const initialState: State = {
 
 export function reducer(
     state = initialState,
-    action: AppActions.Actions | KeymapActions.Actions | MacroActions.Actions | UserConfig.Actions | DeviceActions.Actions
+    action: AppActions.Actions | KeymapActions.Actions | MacroActions.Actions | UserConfig.Actions | DeviceActions.Actions | DonglePairing.Actions
 ): State {
     switch (action.type) {
 
@@ -1003,6 +1005,30 @@ export function reducer(
             return {
                 ...state,
                 selectedMacroAction: (action as MacroActions.SelectMacroActionAction).payload
+            };
+        }
+
+        case DonglePairing.ActionTypes.DonglePairingSuccess: {
+            const bleAddress = (action as DonglePairing.DonglePairingSuccessAction).payload;
+            const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
+            userConfiguration.hostConnections = [...userConfiguration.hostConnections];
+
+            for (let i = 0; i < userConfiguration.hostConnections.length; i += 1) {
+                const hostConnection = userConfiguration.hostConnections[i];
+                if (hostConnection.type === HostConnections.Empty || i === userConfiguration.hostConnections.length - 1) {
+                    const newHostConnection = new HostConnection();
+                    newHostConnection.type = HostConnections.Dongle;
+                    newHostConnection.address = bleAddress;
+                    newHostConnection.name = 'Dongle';
+
+                    userConfiguration.hostConnections[i] = newHostConnection;
+                    break;
+                }
+            }
+
+            return {
+                ...state,
+                userConfiguration,
             };
         }
 

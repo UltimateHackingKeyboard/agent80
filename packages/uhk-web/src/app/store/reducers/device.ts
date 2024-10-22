@@ -23,6 +23,7 @@ import { ReadConfigSizesReplyAction } from '../actions/device';
 import { getSaveToKeyboardButtonState, initProgressButtonState, ProgressButtonState } from './progress-button-state';
 
 export interface State {
+    bleAddress?: string;
     isKeyboardLayoutChanging: boolean;
     connectedDevice?: UhkDeviceProduct;
     hasPermission: boolean;
@@ -115,6 +116,7 @@ export function reducer(state = initialState, action: Action): State {
             const data = (<Device.ConnectionStateChangedAction>action).payload;
             return {
                 ...state,
+                bleAddress: data.bleAddress,
                 connectedDevice: data.connectedDevice,
                 deviceConnectionStateLoaded: true,
                 hasPermission: data.hasPermission,
@@ -271,6 +273,7 @@ export function reducer(state = initialState, action: Action): State {
 }
 
 export const hasDevicePermission = (state: State) => state.hasPermission && state.udevRuleInfo === UdevRulesInfo.Ok;
+export const getBleAddress = (state: State): string => state.bleAddress;
 export const getMissingDeviceState = (state: State): MissingDeviceState => {
     if (!state.deviceConnectionStateLoaded) {
         return {

@@ -51,6 +51,9 @@ export class Device {
     public static readonly getUserConfigFromHistoryReply = 'device-get-user-config-from-history-reply';
     public static readonly statusBufferChanged = 'device-status-buffer-changed';
     public static readonly toggleI2cDebugging = 'device-toggle-i2c-debugging';
+    public static readonly startDonglePairing = 'device-start-dongle-pairing';
+    public static readonly donglePairingSuccess = 'device-dongle-pairing-success';
+    public static readonly donglePairingFailed = 'device-dongle-pairing-failed';
     public static readonly i2cWatchdogCounterChanged = 'device-i2c-watchdog-counter-changed';
 }
 

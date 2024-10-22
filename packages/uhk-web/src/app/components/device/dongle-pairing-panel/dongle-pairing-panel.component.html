@@ -1,0 +1,13 @@
+<div class="dongle-pairing-panel-wrapper" role="alert" [ngSwitch]="state">
+    <span *ngSwitchCase="DonglePairingStates.Idle">
+        A dongle is detected. <a routerLink="/device/host-connections" (click)="pairDongle.emit()">Pair it</a> with this keyboard.
+    </span>
+
+    <span *ngSwitchCase="DonglePairingStates.Pairing">
+        Dongle is pair it with this keyboard. <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
+    </span>
+
+    <span *ngSwitchCase="DonglePairingStates.PairingFailed">
+        Dongle pairing failed. <a routerLink="/device/host-connections" (click)="pairDongle.emit()">Retry pairing</a> with this keyboard.
+    </span>
+</div>

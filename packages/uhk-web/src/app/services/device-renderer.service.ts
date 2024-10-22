@@ -21,6 +21,10 @@ import {
 } from 'uhk-common';
 
 import { AppState } from '../store';
+import {
+    DonglePairingFailedAction,
+    DonglePairingSuccessAction,
+} from '../store/actions/dongle-pairing.action';
 import { IpcCommonRenderer } from './ipc-common-renderer';
 import {
     ChangeKeyboardLayoutReplyAction,
@@ -99,6 +103,10 @@ export class DeviceRendererService {
         this.ipcRenderer.send(IpcEvents.device.getUserConfigFromHistory, fileName);
     }
 
+    startDonglePairing(): void {
+        this.ipcRenderer.send(IpcEvents.device.startDonglePairing);
+    }
+
     toggleI2cDebugging(enabled: boolean): void {
         this.ipcRenderer.send(IpcEvents.device.toggleI2cDebugging, enabled);
     }
@@ -173,6 +181,14 @@ export class DeviceRendererService {
                 uploadFileData: response,
                 autoSave: false
             }));
+        });
+
+        this.ipcRenderer.on(IpcEvents.device.donglePairingSuccess, (event: string, bleAddress: string) => {
+            this.store.dispatch(new DonglePairingSuccessAction(bleAddress));
+        });
+
+        this.ipcRenderer.on(IpcEvents.device.donglePairingFailed, (event: string, message: string) => {
+            this.store.dispatch(new DonglePairingFailedAction(message));
         });
     }
 

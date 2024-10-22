@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { DataOption, KBoot, Properties, UsbPeripheral } from 'kboot';
 import {
     ALL_UHK_DEVICES,
+    BleAddressPair,
     Buffer,
     ConfigSizesInfo,
     convertBleAddressArrayToString,
@@ -683,7 +684,7 @@ export class UhkOperations {
         return responseBuffer[1];
     }
 
-    public async pairToDongle(dongle: UhkHidDevice) : Promise<void> {
+    public async pairToDongle(dongle: UhkHidDevice) : Promise<BleAddressPair> {
         const deviceBleAddress = await this.device.getBleAddress();
         this.logService.misc('[DeviceOperation] Device BLE address: ', convertBleAddressArrayToString(deviceBleAddress));
         const dongleBleAddress = await dongle.getBleAddress();
@@ -743,6 +744,11 @@ export class UhkOperations {
         });
 
         this.logService.misc('[DeviceOperation] Device to Dongle pairing finished');
+
+        return {
+            address: convertBleAddressArrayToString(deviceBleAddress),
+            pairAddress: convertBleAddressArrayToString(dongleBleAddress),
+        };
     }
 
     public async setVariable(variable: UsbVariables, value: number): Promise<void> {
