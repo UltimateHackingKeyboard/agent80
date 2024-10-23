@@ -25,6 +25,7 @@ import { getSaveToKeyboardButtonState, initProgressButtonState, ProgressButtonSt
 export interface State {
     bleAddress?: string;
     isKeyboardLayoutChanging: boolean;
+    isPairedWithDongle?: boolean;
     connectedDevice?: UhkDeviceProduct;
     hasPermission: boolean;
     bootloaderActive: boolean;
@@ -117,6 +118,7 @@ export function reducer(state = initialState, action: Action): State {
             return {
                 ...state,
                 bleAddress: data.bleAddress,
+                isPairedWithDongle: data.isPairedWithDongle,
                 connectedDevice: data.connectedDevice,
                 deviceConnectionStateLoaded: true,
                 hasPermission: data.hasPermission,
@@ -273,7 +275,8 @@ export function reducer(state = initialState, action: Action): State {
 }
 
 export const hasDevicePermission = (state: State) => state.hasPermission && state.udevRuleInfo === UdevRulesInfo.Ok;
-export const getBleAddress = (state: State): string => state.bleAddress;
+export const getDeviceBleAddress = (state: State): string => state.bleAddress;
+export const getDevicePairedWithDongle = (state: State): boolean => state.isPairedWithDongle;
 export const getMissingDeviceState = (state: State): MissingDeviceState => {
     if (!state.deviceConnectionStateLoaded) {
         return {

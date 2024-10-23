@@ -228,7 +228,8 @@ export class UhkHidDevice {
             ...address,
         ]);
         const responseBuffer = await this.write(buffer);
-        const response = responseBuffer.readUInt8(0);
+        // 1st byte is the status code we skip it
+        const response = responseBuffer.readUInt8(1);
 
         return response === 1;
     }

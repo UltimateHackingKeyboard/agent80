@@ -6,6 +6,7 @@ import { UhkDeviceProduct } from './uhk-products.js';
 
 export interface DeviceConnectionState {
     bleAddress?: string;
+    isPairedWithDongle?: boolean;
     connectedDevice?: UhkDeviceProduct;
     dongle: Dongle;
     hasPermission: boolean;

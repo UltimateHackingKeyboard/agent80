@@ -222,7 +222,8 @@ export const deviceConnected = createSelector(
         return !!device.connectedDevice;
     });
 export const hasDevicePermission = createSelector(deviceState, fromDevice.hasDevicePermission);
-export const getDeviceBleAddress = createSelector(deviceState, fromDevice.getBleAddress);
+export const getDeviceBleAddress = createSelector(deviceState, fromDevice.getDeviceBleAddress);
+export const getDevicePairedWithDongle = createSelector(deviceState, fromDevice.getDevicePairedWithDongle);
 export const getMissingDeviceState = createSelector(deviceState, fromDevice.getMissingDeviceState);
 export const xtermLog = createSelector(firmwareState, fromFirmware.xtermLog);
 export const flashFirmwareButtonDisabled = createSelector(runningInElectron, updatingFirmware, (electron, upgradingFirmware) => !electron || upgradingFirmware);
@@ -486,10 +487,13 @@ export const getDonglePairingState = createSelector(
     getDongleState,
     getUserConfiguration,
     deviceConfigurationLoaded,
+    getDevicePairedWithDongle,
     (isRunningInElectron,
         dongleState,
         userConfig,
-        deviceConfigLoaded): DonglePairingState => {
+        deviceConfigLoaded,
+        devicePairedWithDongle,
+    ): DonglePairingState => {
 
         if (!isRunningInElectron) {
             return {
@@ -498,14 +502,16 @@ export const getDonglePairingState = createSelector(
             };
         }
 
-        const isDongleBleInHostConnections = dongleState.dongle?.bleAddress
+        const isDongleBleMissingFromHostConnections = dongleState.dongle?.bleAddress
             && !userConfig.hostConnections.some(hostConnection => {
-                return hostConnection.type === HostConnections.Dongle && hostConnection.address === dongleState.dongle?.bleAddress;
+                return hostConnection.type === HostConnections.Dongle && hostConnection.address === dongleState.dongle.bleAddress;
             });
+
+        const isBleAddressMismatches = dongleState.dongle?.bleAddress && (!devicePairedWithDongle || !dongleState.dongle.isPairedWithKeyboard);
 
         return {
             state: dongleState.state,
-            showDonglePairingPanel: deviceConfigLoaded && isDongleBleInHostConnections,
+            showDonglePairingPanel: deviceConfigLoaded && (isDongleBleMissingFromHostConnections || isBleAddressMismatches),
         };
     }
 );

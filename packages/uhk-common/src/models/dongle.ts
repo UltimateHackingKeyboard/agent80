@@ -1,7 +1,7 @@
 export interface Dongle {
     bleAddress?: string;
 
-    keyboardBleAddress?: string;
+    isPairedWithKeyboard?: boolean;
     /**
      * True if more than 1 UHK dongle connected.
      */

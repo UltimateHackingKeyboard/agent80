@@ -735,8 +735,10 @@ export class DeviceService {
                         if (state.hasPermission && state.communicationInterfaceAvailable) {
                             state.hardwareModules = await this.getHardwareModules(false);
                             deviceProtocolVersion = state.hardwareModules.rightModuleInfo.deviceProtocolVersion;
+                            let deviceBleAddress: number[];
                             if (await this.device.isDeviceSupportWirelessUSBCommands()) {
-                                state.bleAddress = convertBleAddressArrayToString(await this.device.getBleAddress());
+                                deviceBleAddress = await this.device.getBleAddress();
+                                state.bleAddress = convertBleAddressArrayToString(deviceBleAddress);
                             }
 
                             if (!state.dongle.multiDevice && state.dongle.serialNumber && state.dongle.serialNumber !== savedState?.dongle?.serialNumber) {
@@ -744,8 +746,10 @@ export class DeviceService {
                                 let dongleUhkDevice: UhkHidDevice;
                                 try {
                                     dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongle);
-                                    state.dongle.bleAddress = convertBleAddressArrayToString(await dongleUhkDevice.getBleAddress());
-                                    state.dongle.keyboardBleAddress = convertBleAddressArrayToString(await dongleUhkDevice.getPairedRightPairBleAddress());
+                                    const dongleBleAddress = await dongleUhkDevice.getBleAddress();
+                                    state.dongle.bleAddress = convertBleAddressArrayToString(dongleBleAddress);
+                                    state.dongle.isPairedWithKeyboard = await dongleUhkDevice.isPairedWith(deviceBleAddress);
+                                    state.isPairedWithDongle = await this.device.isPairedWith(dongleBleAddress);
                                 }
                                 catch (err) {
                                     this.logService.error("Can't query Dongle BLE Addresses", err);
