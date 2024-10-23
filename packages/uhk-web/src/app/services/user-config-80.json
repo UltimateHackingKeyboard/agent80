@@ -72,7 +72,7 @@
   "displayBrightnessBattery": 255,
   "keyBacklightBrightness": 255,
   "keyBacklightBrightnessBattery": 255,
-  "displayFadeOutTimeout": 0,
+  "displayFadeOutTimeout": 300,
   "displayFadeOutBatteryTimeout": 10,
   "keyBacklightFadeOutTimeout": 0,
   "keyBacklightFadeOutBatteryTimeout": 10,
