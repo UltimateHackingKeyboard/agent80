@@ -870,6 +870,20 @@ export function reducer(
             };
         }
 
+        case UserConfig.ActionTypes.SetHostConnectionSwitchover: {
+            const payload = (action as UserConfig.SetHostConnectionSwitchoverAction).payload;
+            const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
+            userConfiguration.hostConnections = [...userConfiguration.hostConnections];
+            const newHostConnection = new HostConnection(userConfiguration.hostConnections[payload.index]);
+            newHostConnection.switchover = payload.checked;
+            userConfiguration.hostConnections[payload.index] = newHostConnection;
+
+            return {
+                ...state,
+                userConfiguration,
+            };
+        }
+
         case UserConfig.ActionTypes.SetModuleConfigurationValue: {
             const payload = (action as UserConfig.SetModuleConfigurationValueAction).payload;
             const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);

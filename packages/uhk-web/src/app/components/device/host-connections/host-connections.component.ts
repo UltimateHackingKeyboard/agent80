@@ -6,7 +6,11 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { HostConnection } from 'uhk-common';
 
-import { RenameHostConnectionAction, ReorderHostConnectionsAction } from '../../../store/actions/user-config';
+import {
+    RenameHostConnectionAction,
+    ReorderHostConnectionsAction,
+    SetHostConnectionSwitchoverAction,
+} from '../../../store/actions/user-config';
 import { AppState, getHostConnections } from '../../../store/index';
 
 @Component({
@@ -73,5 +77,9 @@ export class HostConnectionsComponent implements OnInit, OnDestroy {
 
     hostConnectionsReordered(deviceTargets: HostConnection[]): void {
         this.store.dispatch(new ReorderHostConnectionsAction(deviceTargets));
+    }
+
+    setHostConnectionSwitchover(index: number, checked: boolean): void {
+        this.store.dispatch(new SetHostConnectionSwitchoverAction({index, checked}));
     }
 }
