@@ -1024,6 +1024,15 @@ export function reducer(
 
         case DonglePairing.ActionTypes.DonglePairingSuccess: {
             const bleAddress = (action as DonglePairing.DonglePairingSuccessAction).payload;
+
+            const isUserConfigContainsBleAddress = state.userConfiguration.hostConnections.some(hostConnection => {
+                return hostConnection.type === HostConnections.Dongle && hostConnection.address === bleAddress;
+            });
+
+            if (isUserConfigContainsBleAddress) {
+                return state;
+            }
+
             const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
             userConfiguration.hostConnections = [...userConfiguration.hostConnections];
 
