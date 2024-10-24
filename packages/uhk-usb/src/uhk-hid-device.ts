@@ -138,6 +138,14 @@ export class UhkHidDevice {
         return false;
     }
 
+    public async deleteBond(address: number[]): Promise<void> {
+        await this.assertDeviceSupportWirelessUSBCommands();
+
+        this.logService.usb('[UhkHidDevice] USB[T]: Delete all bonds');
+        const buffer = Buffer.from([UsbCommand.UnpairAll, ...address]);
+        await this.write(buffer);
+    }
+
     public async deleteAllBonds(): Promise<void> {
         await this.assertDeviceSupportWirelessUSBCommands();
 
@@ -423,7 +431,7 @@ export class UhkHidDevice {
     }
 
     async reenumerate(
-        { enumerationMode, device, timeout = BOOTLOADER_TIMEOUT_MS }: ReenumerateOption
+        { enumerationMode, force, device, timeout = BOOTLOADER_TIMEOUT_MS }: ReenumerateOption
     ): Promise<ReenumerateResult> {
         this.close();
         const reenumMode = EnumerationModes[enumerationMode].toString();
@@ -433,8 +441,10 @@ export class UhkHidDevice {
         const startTime = new Date();
         const waitTimeout = timeout + 20000;
         let jumped = false;
+        let iteration = 0;
 
         while (new Date().getTime() - startTime.getTime() < waitTimeout) {
+            iteration++;
             let allDevice = [];
             for (const vidPid of vidPidPairs) {
 
@@ -455,9 +465,11 @@ export class UhkHidDevice {
                     const devs = await getUhkDevices([vidPid.vid]);
                     allDevice.push(...devs);
 
-                    const reenumeratedDevice = devs.find((x: Device) =>
-                        x.vendorId === vidPid.vid &&
-                        x.productId === vidPid.pid);
+                    const reenumeratedDevice = force && iteration === 1
+                        ? false
+                        : devs.find((x: Device) =>
+                            x.vendorId === vidPid.vid &&
+                            x.productId === vidPid.pid);
 
                     if (reenumeratedDevice) {
                         this.logService.misc('[UhkHidDevice] Reenumerating devices');

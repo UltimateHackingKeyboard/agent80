@@ -1,17 +1,19 @@
 import { ipcMain } from 'electron';
+import { emptyDir } from 'fs-extra';
 import { cloneDeep, isEqual } from 'lodash';
+import os from 'os';
 import {
     BackupUserConfigurationInfo,
     ChangeKeyboardLayoutIpcResponse,
-    convertBleAddressArrayToString,
     CommandLineArgs,
     ConfigurationReply,
+    convertBleAddressArrayToString,
     DeviceConnectionState,
     disableAgentUpgradeProtection,
     findUhkModuleById,
+    FIRMWARE_UPGRADE_METHODS,
     FirmwareUpgradeFailReason,
     FirmwareUpgradeIpcResponse,
-    FIRMWARE_UPGRADE_METHODS,
     getHardwareConfigFromDeviceResponse,
     getUserConfigFromDeviceResponse,
     HardwareConfiguration,
@@ -36,6 +38,7 @@ import {
     shouldUpgradeFirmware,
     simulateInvalidUserConfigError,
     UHK_80_DEVICE_LEFT,
+    UHK_DONGLE,
     UHK_MODULES,
     UpdateFirmwareData,
     UploadFileData,
@@ -46,6 +49,7 @@ import {
     ConfigBufferId,
     convertBufferToIntArray,
     DevicePropertyIds,
+    EnumerationModes,
     getCurrentUhkDeviceProduct,
     getCurrentUhkDeviceProductByBootloaderId,
     getCurrentUhkDongleHID,
@@ -58,15 +62,11 @@ import {
     TmpFirmware,
     UhkHidDevice,
     UhkOperations,
-    UsbVariables,
     usbDeviceJsonFormatter,
+    UsbVariables,
     waitForDevices,
     waitForUhkDeviceConnected
 } from 'uhk-usb';
-import { emptyDir } from 'fs-extra';
-import os from 'os';
-
-import { QueueManager } from './queue-manager';
 import {
     backupUserConfiguration,
     copySmartMacroDocToWebserver,
@@ -79,6 +79,8 @@ import {
     saveTmpFirmware,
     saveUserConfigHistoryAsync
 } from '../util';
+
+import { QueueManager } from './queue-manager';
 
 /**
  * IpcMain pair of the UHK Communication
@@ -637,6 +639,31 @@ export class DeviceService {
         }
         catch(error) {
             this.logService.error('[DeviceService] Dongle pairing failed', error);
+            try {
+                const uhkDeviceProduct = await getCurrentUhkDeviceProduct(this.options);
+                await this.device.reenumerate({
+                    device: uhkDeviceProduct,
+                    enumerationMode: EnumerationModes.NormalKeyboard,
+                    force: true,
+                });
+            }
+            catch(reenumerationError) {
+                this.logService.error("[DeviceService] Can't reenumerate device after failed dongle pairing", reenumerationError);
+            }
+
+            try {
+                const uhkDeviceProduct = await getCurrentUhkDongleHID();
+                const uhkHidDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, uhkDeviceProduct);
+                await uhkHidDevice.reenumerate({
+                    device: UHK_DONGLE,
+                    enumerationMode: EnumerationModes.NormalKeyboard,
+                    force: true,
+                });
+            }
+            catch(reenumerationError) {
+                this.logService.error("[DeviceService] Can't reenumerate dongle after failed dongle pairing", reenumerationError);
+            }
+
             event.sender.send(IpcEvents.device.donglePairingFailed, error.message);
         }
         finally {

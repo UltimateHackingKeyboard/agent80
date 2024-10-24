@@ -696,7 +696,7 @@ export class UhkOperations {
         await dongle.switchToPairingMode();
 
         this.logService.misc('[DeviceOperation] Device delete all bonds');
-        await this.device.deleteAllBonds();
+        await this.device.deleteBond(dongleBleAddress);
         this.logService.misc('[DeviceOperation] Dongle delete all bonds');
         await dongle.deleteAllBonds();
 
