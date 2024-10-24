@@ -26,6 +26,7 @@ import {
     RIGHT_TRACKPOINT_MODULE,
     UHK_60_DEVICE,
     UHK_60_V2_DEVICE,
+    UHK_80_DEVICE,
     UHK_DEVICES,
     UHK_OFFICIAL_FIRMWARE_REPO,
     UhkBuffer,
@@ -488,14 +489,16 @@ export const getDonglePairingState = createSelector(
     getUserConfiguration,
     deviceConfigurationLoaded,
     getDevicePairedWithDongle,
+    getConnectedDevice,
     (isRunningInElectron,
         dongleState,
         userConfig,
         deviceConfigLoaded,
         devicePairedWithDongle,
+        connectedDevice,
     ): DonglePairingState => {
 
-        if (!isRunningInElectron) {
+        if (!isRunningInElectron || !connectedDevice?.id || connectedDevice.id !== UHK_80_DEVICE.id) {
             return {
                 state: DonglePairingStates.Idle,
                 showDonglePairingPanel: false,
