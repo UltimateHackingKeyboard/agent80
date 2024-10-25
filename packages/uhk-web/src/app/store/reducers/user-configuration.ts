@@ -1,10 +1,11 @@
-import { HostConnections } from 'uhk-common';
 import {
     BacklightingMode,
     Constants,
+    emptyHostConnection,
     getDefaultHalvesInfo,
     HalvesInfo,
     HostConnection,
+    HostConnections,
     initBacklightingColorPalette,
     KeyAction,
     KeyActionHelper,
@@ -1019,6 +1020,23 @@ export function reducer(
             return {
                 ...state,
                 selectedMacroAction: (action as MacroActions.SelectMacroActionAction).payload
+            };
+        }
+
+        case DonglePairing.ActionTypes.DeleteHostConnectionSuccess: {
+            const {index} = (action as DonglePairing.DeleteHostConnectionSuccessAction).payload;
+            const userConfiguration: UserConfiguration = Object.assign(new UserConfiguration(), state.userConfiguration);
+            userConfiguration.hostConnections = state.userConfiguration.hostConnections.map((hostConnection, idx) => {
+                if (idx === index) {
+                    return emptyHostConnection();
+                }
+
+                return hostConnection;
+            });
+
+            return  {
+                ...state,
+                userConfiguration,
             };
         }
 

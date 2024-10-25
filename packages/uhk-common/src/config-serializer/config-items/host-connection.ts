@@ -26,6 +26,18 @@ export function convertBleAddressArrayToString(address: number[]): string {
     return address.map(x => x.toString(16)).join(BLE_ADDRESS_SEPARATOR);
 }
 
+export function convertBleStringToNumberArray(address: string): number[] {
+    const split = address.split(BLE_ADDRESS_SEPARATOR);
+    const result: number[] = [];
+
+    for(let i = 0; i < BLE_ADDRESS_LENGTH; i++) {
+        const segment = Number.parseInt(split[i], 16) || 0;
+        result.push(segment);
+    }
+
+    return result;
+}
+
 export class HostConnection {
     @assertEnum(HostConnections) type: HostConnections;
 
@@ -99,6 +111,10 @@ export class HostConnection {
         }
     }
 
+    public hasAddress(): boolean {
+        return this.type === HostConnections.BLE || this.type === HostConnections.Dongle;
+    }
+
     private fromJsonBinaryV8(buffer: UhkBuffer, serialisationInfo: SerialisationInfo): HostConnection {
         this.type = buffer.readUInt8();
 
@@ -140,10 +156,6 @@ export class HostConnection {
         }
 
         return this;
-    }
-
-    private hasAddress(): boolean {
-        return this.type === HostConnections.BLE || this.type === HostConnections.Dongle;
     }
 }
 

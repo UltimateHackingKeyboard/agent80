@@ -24,8 +24,6 @@ import {
     UNKNOWN_DEVICE,
 } from 'uhk-common';
 import { promisify } from 'util';
-import { PairingStatuses } from './constants.js';
-import { PairIds } from './constants.js';
 import {
     ConfigBufferId,
     DevicePropertyIds,
@@ -34,6 +32,9 @@ import {
     KbootCommands,
     MAX_USB_PAYLOAD_SIZE,
     ModulePropertyId,
+    PAIRING_STATUS_TEXT,
+    PairIds,
+    PairingStatuses,
     UsbCommand,
     UsbVariables
 } from './constants.js';
@@ -729,6 +730,7 @@ export class UhkOperations {
             timeoutErrorMessage: '[DeviceOperation] Device pairing timeout',
             wait: 100,
         });
+        this.logService.misc(`[DeviceOperation] Device pairing result: ${PAIRING_STATUS_TEXT[deviceParingStatus]}`);
 
         this.logService.misc('[DeviceOperation] Dongle waiting for pairing finished');
         let dongleParingStatus: PairingStatuses;
@@ -742,6 +744,7 @@ export class UhkOperations {
             timeoutErrorMessage: '[DeviceOperation] Dongle pairing timeout',
             wait: 100,
         });
+        this.logService.misc(`[DeviceOperation] Dongle pairing result: ${PAIRING_STATUS_TEXT[dongleParingStatus]}`);
 
         this.logService.misc('[DeviceOperation] Device to Dongle pairing finished');
 

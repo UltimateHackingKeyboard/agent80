@@ -8,6 +8,7 @@ import {
     CommandLineArgs,
     ConfigurationReply,
     convertBleAddressArrayToString,
+    convertBleStringToNumberArray,
     DeviceConnectionState,
     disableAgentUpgradeProtection,
     findUhkModuleById,
@@ -96,6 +97,8 @@ export class DeviceService {
     private wasCalledSaveUserConfiguration = false;
     private isI2cDebuggingEnabled = false;
     private i2cWatchdogRecoveryCounter = -1;
+    private savedState: DeviceConnectionState;
+
 
     constructor(private logService: LogService,
                 private win: Electron.BrowserWindow,
@@ -120,6 +123,15 @@ export class DeviceService {
         ipcMain.on(IpcEvents.device.changeKeyboardLayout, (...args: any[]) => {
             this.queueManager.add({
                 method: this.changeKeyboardLayout,
+                bind: this,
+                params: args,
+                asynchronous: true
+            });
+        });
+
+        ipcMain.on(IpcEvents.device.deleteHostConnection, (...args: any[]) => {
+            this.queueManager.add({
+                method: this.deleteHostConnection,
                 bind: this,
                 params: args,
                 asynchronous: true
@@ -627,46 +639,66 @@ export class DeviceService {
         }
     }
 
+    public async deleteHostConnection(event: Electron.IpcMainEvent, args: Array<any>): Promise<void> {
+        const {isConnectedDongleAddress, index, address} = args[0];
+        this.logService.misc('[DeviceService] delete host connection', { isConnectedDongleAddress, index, address });
+
+        try {
+            await this.stopPollUhkDevice();
+            const dongleHid = await getCurrentUhkDongleHID();
+            let dongleUhkDevice: UhkHidDevice;
+            try {
+                dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
+                await dongleUhkDevice.deleteAllBonds();
+                await this.device.deleteBond(convertBleStringToNumberArray(address));
+                this.logService.misc('[DeviceService] delete host connection success', { address });
+                event.sender.send(IpcEvents.device.deleteHostConnectionSuccess, {index, address});
+            }
+            finally {
+                if (dongleUhkDevice) {
+                    dongleUhkDevice.close();
+                }
+            }
+        } catch (error) {
+            if (isConnectedDongleAddress) {
+                await this.forceReenumerateDongle();
+            }
+            await this.forceReenumerateDevice();
+            this.logService.misc('[DeviceService] delete host connection failed', { address, error });
+            event.sender.send(IpcEvents.device.deleteHostConnectionFailed, error.message);
+        }
+        finally {
+            this.savedState = undefined;
+            this.startPollUhkDevice();
+        }
+    }
+
     public async startDonglePairing(event: Electron.IpcMainEvent): Promise<void> {
         this.logService.misc('[DeviceService] start Dongle pairing');
         try {
             await this.stopPollUhkDevice();
             const dongleHid = await getCurrentUhkDongleHID();
-            const dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
-            const result = await this.operations.pairToDongle(dongleUhkDevice);
-            this.logService.misc('[DeviceService] Dongle pairing success');
-            event.sender.send(IpcEvents.device.donglePairingSuccess, result.pairAddress);
+            let dongleUhkDevice: UhkHidDevice;
+            try {
+                dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
+                const result = await this.operations.pairToDongle(dongleUhkDevice);
+                this.logService.misc('[DeviceService] Dongle pairing success');
+                event.sender.send(IpcEvents.device.donglePairingSuccess, result.pairAddress);
+            }
+            finally {
+                if(dongleUhkDevice) {
+                    dongleUhkDevice.close();
+                }
+            }
         }
         catch(error) {
             this.logService.error('[DeviceService] Dongle pairing failed', error);
-            try {
-                const uhkDeviceProduct = await getCurrentUhkDeviceProduct(this.options);
-                await this.device.reenumerate({
-                    device: uhkDeviceProduct,
-                    enumerationMode: EnumerationModes.NormalKeyboard,
-                    force: true,
-                });
-            }
-            catch(reenumerationError) {
-                this.logService.error("[DeviceService] Can't reenumerate device after failed dongle pairing", reenumerationError);
-            }
-
-            try {
-                const uhkDeviceProduct = await getCurrentUhkDongleHID();
-                const uhkHidDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, uhkDeviceProduct);
-                await uhkHidDevice.reenumerate({
-                    device: UHK_DONGLE,
-                    enumerationMode: EnumerationModes.NormalKeyboard,
-                    force: true,
-                });
-            }
-            catch(reenumerationError) {
-                this.logService.error("[DeviceService] Can't reenumerate dongle after failed dongle pairing", reenumerationError);
-            }
-
+            await this.forceReenumerateDongle();
+            await this.forceReenumerateDevice();
             event.sender.send(IpcEvents.device.donglePairingFailed, error.message);
         }
         finally {
+            this.savedState = undefined;
             this.startPollUhkDevice();
         }
     }
@@ -745,7 +777,6 @@ export class DeviceService {
      * @private
      */
     private async uhkDevicePoller(): Promise<void> {
-        let savedState: DeviceConnectionState;
         let deviceProtocolVersion: string;
         let iterationCount = 0;
 
@@ -756,19 +787,20 @@ export class DeviceService {
 
                 try {
                     const state = await this.device.getDeviceConnectionStateAsync();
-                    if (!isEqual(state, savedState)) {
+                    if (!isEqual(state, this.savedState)) {
                         const newState = cloneDeep(state);
 
                         if (state.hasPermission && state.communicationInterfaceAvailable) {
                             state.hardwareModules = await this.getHardwareModules(false);
                             deviceProtocolVersion = state.hardwareModules.rightModuleInfo.deviceProtocolVersion;
+                            const isDeviceSupportWirelessUSBCommands = await this.device.isDeviceSupportWirelessUSBCommands();
                             let deviceBleAddress: number[];
-                            if (await this.device.isDeviceSupportWirelessUSBCommands()) {
+                            if (isDeviceSupportWirelessUSBCommands) {
                                 deviceBleAddress = await this.device.getBleAddress();
                                 state.bleAddress = convertBleAddressArrayToString(deviceBleAddress);
                             }
 
-                            if (!state.dongle.multiDevice && state.dongle.serialNumber && state.dongle.serialNumber !== savedState?.dongle?.serialNumber) {
+                            if (isDeviceSupportWirelessUSBCommands && !state.dongle.multiDevice && state.dongle.serialNumber && state.dongle.serialNumber !== this.savedState?.dongle?.serialNumber) {
                                 const dongle = await getCurrentUhkDongleHID();
                                 let dongleUhkDevice: UhkHidDevice;
                                 try {
@@ -782,7 +814,7 @@ export class DeviceService {
                                     this.logService.error("Can't query Dongle BLE Addresses", err);
                                 }
                                 finally {
-                                    if(dongleUhkDevice) {
+                                    if (dongleUhkDevice) {
                                         dongleUhkDevice.close();
                                     }
                                 }
@@ -800,7 +832,7 @@ export class DeviceService {
                         }
                         this.win.webContents.send(IpcEvents.device.deviceConnectionStateChanged, state);
 
-                        savedState = newState;
+                        this.savedState = newState;
 
                         this.logService.misc('[DeviceService] Device connection state changed to:', JSON.stringify(state, null, 2));
                     }
@@ -894,5 +926,49 @@ export class DeviceService {
         const files = await loadUserConfigHistoryAsync();
 
         event.sender.send(IpcEvents.device.loadUserConfigHistoryReply, files);
+    }
+
+    private async forceReenumerateDongle(): Promise<void> {
+        this.logService.misc('[DeviceService] Dongle force reenumerate');
+
+        let uhkHidDevice: UhkHidDevice;
+        try {
+            const uhkDeviceProduct = await getCurrentUhkDongleHID();
+            uhkHidDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, uhkDeviceProduct);
+            await uhkHidDevice.reenumerate({
+                device: UHK_DONGLE,
+                enumerationMode: EnumerationModes.NormalKeyboard,
+                force: true,
+            });
+            this.logService.error('[DeviceService] Dongle force reenumerate');
+        }
+        catch(reenumerationError) {
+            this.logService.misc("[DeviceService] Can't force reenumerate dongle", reenumerationError);
+        }
+        finally {
+            if (uhkHidDevice) {
+                uhkHidDevice.close();
+            }
+        }
+    }
+
+    private async forceReenumerateDevice(): Promise<void> {
+        this.logService.misc('[DeviceService] Device force reenumerate');
+
+        try {
+            const uhkDeviceProduct = await getCurrentUhkDeviceProduct(this.options);
+            await this.device.reenumerate({
+                device: uhkDeviceProduct,
+                enumerationMode: EnumerationModes.NormalKeyboard,
+                force: true,
+            });
+            this.logService.misc('[DeviceService] Device force reenumerate done');
+        }
+        catch(reenumerationError) {
+            this.logService.error("[DeviceService] Can't reenumerate force reenumerate device", reenumerationError);
+        }
+        finally {
+            this.device.close();
+        }
     }
 }

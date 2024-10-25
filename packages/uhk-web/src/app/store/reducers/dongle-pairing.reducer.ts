@@ -26,25 +26,53 @@ export function reducer(state = initialState, action: Action): State {
         }
 
         case Device.ActionTypes.SaveToKeyboardFailed: {
-            if (state.state !== DonglePairingStates.PairingSuccess) {
-                return state;
+            if (state.state === DonglePairingStates.Pairing) {
+                return {
+                    ...state,
+                    state: DonglePairingStates.PairingFailed,
+                };
             }
 
+            if (state.state === DonglePairingStates.Deleting) {
+                return {
+                    ...state,
+                    state: DonglePairingStates.DeletingFailed,
+                };
+            }
+
+            return state;
+        }
+
+        case DonglePairing.ActionTypes.DeleteHostConnection: {
             return {
                 ...state,
-                state: DonglePairingStates.PairingFailed,
+                state: DonglePairingStates.Deleting,
+            };
+        }
+
+        case DonglePairing.ActionTypes.DeleteHostConnectionFailed: {
+            return {
+                ...state,
+                state: DonglePairingStates.DeletingFailed,
+            };
+        }
+
+        case DonglePairing.ActionTypes.DeleteHostConnectionSuccess: {
+            return {
+                ...state,
+                state: DonglePairingStates.DeletingSuccess,
             };
         }
 
         case Device.ActionTypes.SaveToKeyboardSuccess: {
-            if (state.state !== DonglePairingStates.PairingSuccess) {
-                return state;
+            if (state.state === DonglePairingStates.PairingSuccess || state.state === DonglePairingStates.DeletingSuccess) {
+                return {
+                    ...state,
+                    state: DonglePairingStates.Idle,
+                };
             }
 
-            return {
-                ...state,
-                state: DonglePairingStates.Idle,
-            };
+            return state;
         }
 
         case DonglePairing.ActionTypes.StartDonglePairing: {
@@ -72,3 +100,6 @@ export function reducer(state = initialState, action: Action): State {
             return state;
     }
 }
+
+export const isDonglePairing = (state: State): boolean => state.state === DonglePairingStates.Pairing || state.state === DonglePairingStates.PairingSuccess;
+export const getDongle = (state: State): Dongle => state.dongle;

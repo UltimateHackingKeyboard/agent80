@@ -20,6 +20,8 @@
         <th>
             Switchover
         </th>
+        <th>
+        </th>
     </tr>
     </thead>
     <tbody [dragula]="dragAndDropGroup" [dragulaModel]="hostConnections" (dragulaModelChange)="hostConnectionsReordered($event)">
@@ -48,6 +50,21 @@
                    [ngModel]="hostConnection.switchover"
                    (ngModelChange)="setHostConnectionSwitchover(index, $event)"
             >
+        </td>
+        <td>
+            <button *ngIf="hostConnection.hasAddress()"
+                    [disabled]="isDonglePairing"
+                    (confirm)="deleteHostConnection(index, hostConnection)"
+                    type="button"
+                    class="btn"
+                    mwlConfirmationPopover
+                    popoverTitle="Do you really want to delete this connection?"
+                    placement="bottom"
+                    confirmText="Yes"
+                    cancelText="No"
+            >
+                <fa-icon [icon]="faTrash" />
+            </button>
         </td>
     </tr>
     </ng-container>

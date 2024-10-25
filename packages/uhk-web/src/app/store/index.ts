@@ -483,6 +483,8 @@ export const calculateDeviceUiState = createSelector(
 );
 
 export const getDongleState = (state: AppState) => state.dongle;
+export const isDonglePairing = createSelector(getDongleState, fromDongle.isDonglePairing);
+export const getDongle = createSelector(getDongleState, fromDongle.getDongle);
 export const getDonglePairingState = createSelector(
     runningInElectron,
     getDongleState,
@@ -498,7 +500,9 @@ export const getDonglePairingState = createSelector(
         connectedDevice,
     ): DonglePairingState => {
 
-        if (!isRunningInElectron || !connectedDevice?.id || connectedDevice.id !== UHK_80_DEVICE.id) {
+        if (!isRunningInElectron || !connectedDevice?.id || connectedDevice.id !== UHK_80_DEVICE.id ||
+            [DonglePairingStates.Deleting, DonglePairingStates.DeletingSuccess, DonglePairingStates.DeletingFailed].includes(dongleState.state)
+        ) {
             return {
                 state: DonglePairingStates.Idle,
                 showDonglePairingPanel: false,

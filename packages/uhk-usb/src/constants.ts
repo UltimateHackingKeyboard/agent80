@@ -95,6 +95,12 @@ export enum PairingStatuses {
     Failed = 2,
 }
 
+export const PAIRING_STATUS_TEXT = Object.freeze([
+    'InProgress',
+    'Success',
+    'Failed',
+]);
+
 export enum UsbVariables {
     testSwitches = 0,
     testUsbStack = 1,

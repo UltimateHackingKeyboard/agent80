@@ -284,7 +284,6 @@ export class UhkHidDevice {
 
     public async isDeviceSupportWirelessUSBCommands(): Promise<boolean> {
         await this.getDevice();
-        this.logService.misc('this._deviceInfo', this._deviceInfo);
         return [UHK_80_DEVICE, UHK_DONGLE].some(product => {
             return product.keyboard.some(vidPid => {
                 return vidPid.vid === this._deviceInfo.vendorId && vidPid.pid === this._deviceInfo.productId;

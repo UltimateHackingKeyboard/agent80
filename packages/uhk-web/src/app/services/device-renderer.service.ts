@@ -20,8 +20,11 @@ import {
     VersionInformation
 } from 'uhk-common';
 
+import { DeleteHostConnectionPayload } from '../models';
 import { AppState } from '../store';
 import {
+    DeleteHostConnectionFailedAction,
+    DeleteHostConnectionSuccessAction,
     DonglePairingFailedAction,
     DonglePairingSuccessAction,
 } from '../store/actions/dongle-pairing.action';
@@ -57,6 +60,14 @@ export class DeviceRendererService {
 
     changeKeyboardLayout(layout: KeyboardLayout, hardwareConfiguration: HardwareConfiguration): void {
         this.ipcRenderer.send(IpcEvents.device.changeKeyboardLayout, layout, hardwareConfiguration.toJsonObject());
+    }
+
+    deleteHostConnection(data: DeleteHostConnectionPayload, isConnectedDongleAddress: boolean): void {
+        this.ipcRenderer.send(IpcEvents.device.deleteHostConnection, {
+            isConnectedDongleAddress,
+            index: data.index,
+            address: data.hostConnection.address,
+        });
     }
 
     setPrivilegeOnLinux(): void {
@@ -114,6 +125,14 @@ export class DeviceRendererService {
     private registerEvents(): void {
         this.ipcRenderer.on(IpcEvents.device.changeKeyboardLayoutReply, (event: string, response: ChangeKeyboardLayoutIpcResponse) => {
             this.dispachStoreAction(new ChangeKeyboardLayoutReplyAction(response));
+        });
+
+        this.ipcRenderer.on(IpcEvents.device.deleteHostConnectionSuccess, (event: string, data: any) => {
+            this.dispachStoreAction(new DeleteHostConnectionSuccessAction(data));
+        });
+
+        this.ipcRenderer.on(IpcEvents.device.deleteHostConnectionFailed, (event: string, message: string) => {
+            this.dispachStoreAction(new DeleteHostConnectionFailedAction(message));
         });
 
         this.ipcRenderer.on(IpcEvents.device.hardwareModulesLoaded, (event: string, response: HardwareModules) => {
