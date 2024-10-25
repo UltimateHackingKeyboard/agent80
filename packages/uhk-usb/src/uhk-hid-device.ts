@@ -36,7 +36,6 @@ import {
     PairingInfo,
     ReenumerateOption,
     ReenumerateResult,
-    serialisePairingInfo,
 } from './models/index.js';
 import {
     bufferToString,
@@ -261,7 +260,6 @@ export class UhkHidDevice {
     public async setPairingInfo(pairId: PairIds, info: PairingInfo): Promise<void> {
         await this.assertDeviceSupportWirelessUSBCommands();
 
-        this.logService.usb('[UhkHidDevice] set pairing info', serialisePairingInfo(info));
         this.logService.usb('[UhkHidDevice] USB[T]: set pairing info');
         const buffer = Buffer.from([
             UsbCommand.SetPairingData,

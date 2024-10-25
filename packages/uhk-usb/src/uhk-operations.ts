@@ -44,7 +44,6 @@ import {
     I2cBaudRate,
     I2cErrorBuffer,
     LoadConfigurationsResult,
-    serialisePairingInfo,
 } from './models/index.js';
 
 import { UhkHidDevice } from './uhk-hid-device.js';
@@ -703,10 +702,8 @@ export class UhkOperations {
 
         this.logService.misc('[DeviceOperation] Device read pairing info');
         const devicePairInfo = await this.device.getPairingInfo();
-        this.logService.misc('[DeviceOperation] Device pairing info:', serialisePairingInfo(devicePairInfo));
         this.logService.misc('[DeviceOperation] Dongle read pairing info');
         const donglePairInfo = await dongle.getPairingInfo();
-        this.logService.misc('[DeviceOperation] Dongle pairing info:', serialisePairingInfo(donglePairInfo));
 
         this.logService.misc('[DeviceOperation] Device set pairing info');
         await this.device.setPairingInfo(PairIds.Dongle, donglePairInfo);
