@@ -3,11 +3,15 @@
         A dongle is detected. <a routerLink="/device/host-connections" (click)="pairDongle.emit()">Pair it</a> with this keyboard.
     </span>
 
-    <span *ngIf="state === DonglePairingStates.Pairing || state === DonglePairingStates.PairingSuccess">
-        Dongle is pair it with this keyboard. <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
+    <span *ngIf="state === DonglePairingStates.Pairing || state === DonglePairingStates.SavingToKeyboard">
+        Pairing dongle... <fa-icon [icon]="faSpinner" animation="spin"></fa-icon>
     </span>
 
     <span *ngIf="state === DonglePairingStates.PairingFailed">
         Dongle pairing failed. <a routerLink="/device/host-connections" (click)="pairDongle.emit()">Retry pairing</a> with this keyboard.
+    </span>
+
+    <span *ngIf="state === DonglePairingStates.PairingSuccess">
+        Dongle paired.
     </span>
 </div>

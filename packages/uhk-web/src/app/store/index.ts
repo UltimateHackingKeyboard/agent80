@@ -22,8 +22,8 @@ import {
     LEFT_KEY_CLUSTER_MODULE,
     LeftSlotModules,
     PlayMacroAction,
-    RightSlotModules,
     RIGHT_TRACKPOINT_MODULE,
+    RightSlotModules,
     UHK_60_DEVICE,
     UHK_60_V2_DEVICE,
     UHK_80_DEVICE,
@@ -38,6 +38,7 @@ import { environment } from '../../environments/environment';
 import {
     ConfigSizeState,
     DeviceUiStates,
+    DongleOperations,
     DonglePairingState,
     DonglePairingStates,
     FirmwareUpgradeState,
@@ -499,11 +500,11 @@ export const getDonglePairingState = createSelector(
         devicePairedWithDongle,
         connectedDevice,
     ): DonglePairingState => {
-
         if (!isRunningInElectron || !connectedDevice?.id || connectedDevice.id !== UHK_80_DEVICE.id ||
-            [DonglePairingStates.Deleting, DonglePairingStates.DeletingSuccess, DonglePairingStates.DeletingFailed].includes(dongleState.state)
+            dongleState.operation === DongleOperations.Delete
         ) {
             return {
+                operation: dongleState.operation,
                 state: DonglePairingStates.Idle,
                 showDonglePairingPanel: false,
             };
@@ -517,8 +518,11 @@ export const getDonglePairingState = createSelector(
         const isBleAddressMismatches = dongleState.dongle?.bleAddress && (!devicePairedWithDongle || !dongleState.dongle.isPairedWithKeyboard);
 
         return {
-            state: dongleState.state,
-            showDonglePairingPanel: deviceConfigLoaded && (isDongleBleMissingFromHostConnections || isBleAddressMismatches),
+            operation: dongleState.operation,
+            state: dongleState.state === DonglePairingStates.DeletingSuccess
+                ? DonglePairingStates.Idle
+                : dongleState.state,
+            showDonglePairingPanel: deviceConfigLoaded && (isDongleBleMissingFromHostConnections || isBleAddressMismatches || dongleState.operation === DongleOperations.Pairing),
         };
     }
 );
@@ -550,7 +554,7 @@ export const getSideMenuPageState = createSelector(
             advancedSettingsMenuVisible: isAdvancedSettingsMenuVisible,
             connectedDevice: runningInElectronValue ? connectedDevice : UHK_60_DEVICE,
             runInElectron: runningInElectronValue,
-            updatingFirmware: updatingFirmwareValue || donglePairingState.state === DonglePairingStates.Pairing,
+            updatingFirmware: updatingFirmwareValue || donglePairingState.operation !== DongleOperations.None,
             deviceName: userConfiguration.deviceName,
             keymaps: userConfiguration.keymaps,
             keymapQueryParams: {

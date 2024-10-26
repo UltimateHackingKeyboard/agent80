@@ -6,9 +6,17 @@ export enum DonglePairingStates {
     Pairing = 'Pairing',
     PairingSuccess = 'PairingSuccess',
     PairingFailed = 'PairingFailed',
+    SavingToKeyboard = 'SavingToKeyboard',
+}
+
+export enum DongleOperations {
+    Delete = 'Delete',
+    None = 'None',
+    Pairing = 'Pairing',
 }
 
 export interface DonglePairingState {
     showDonglePairingPanel: boolean;
+    operation: DongleOperations;
     state: DonglePairingStates;
 }

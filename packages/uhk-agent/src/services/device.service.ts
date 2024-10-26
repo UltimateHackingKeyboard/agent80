@@ -652,6 +652,7 @@ export class DeviceService {
                 await dongleUhkDevice.deleteAllBonds();
                 await this.device.deleteBond(convertBleStringToNumberArray(address));
                 this.logService.misc('[DeviceService] delete host connection success', { address });
+                await snooze(1000);
                 event.sender.send(IpcEvents.device.deleteHostConnectionSuccess, {index, address});
             }
             finally {
@@ -683,6 +684,7 @@ export class DeviceService {
                 dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
                 const result = await this.operations.pairToDongle(dongleUhkDevice);
                 this.logService.misc('[DeviceService] Dongle pairing success');
+                await snooze(1000);
                 event.sender.send(IpcEvents.device.donglePairingSuccess, result.pairAddress);
             }
             finally {
@@ -933,6 +935,7 @@ export class DeviceService {
 
         let uhkHidDevice: UhkHidDevice;
         try {
+            await snooze(1000);
             const uhkDeviceProduct = await getCurrentUhkDongleHID();
             uhkHidDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, uhkDeviceProduct);
             await uhkHidDevice.reenumerate({
@@ -949,6 +952,7 @@ export class DeviceService {
             if (uhkHidDevice) {
                 uhkHidDevice.close();
             }
+            await snooze(1000);
         }
     }
 
@@ -956,6 +960,8 @@ export class DeviceService {
         this.logService.misc('[DeviceService] Device force reenumerate');
 
         try {
+            this.device.close();
+            await snooze(1000);
             const uhkDeviceProduct = await getCurrentUhkDeviceProduct(this.options);
             await this.device.reenumerate({
                 device: uhkDeviceProduct,
@@ -969,6 +975,7 @@ export class DeviceService {
         }
         finally {
             this.device.close();
+            await snooze(1000);
         }
     }
 }
