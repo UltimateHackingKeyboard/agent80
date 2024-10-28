@@ -724,7 +724,11 @@ export class DeviceService {
         try {
             await this.stopPollUhkDevice();
             if (!(await isUkhKeyboardConnected(UHK_80_DEVICE_LEFT))) {
-                this.logService.misc('[DeviceService] To continue the left half pairing, now connect the left half via USB. (Both left and right half should be connected via USB cable)');
+                this.logService.misc('[DeviceService] Both keyboard halves must be connected via USB.');
+                this.logService.misc('[DeviceService] Please connect them and retry pairing the halves.');
+                event.sender.send(IpcEvents.device.leftHalfPairingFailed, '');
+
+                return;
             }
 
             await waitUntil({
