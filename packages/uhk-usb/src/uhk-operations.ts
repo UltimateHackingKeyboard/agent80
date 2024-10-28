@@ -751,6 +751,71 @@ export class UhkOperations {
         };
     }
 
+    public async pairToLeftHalf(leftHalf: UhkHidDevice): Promise<BleAddressPair> {
+        const deviceBleAddress = await this.device.getBleAddress();
+        this.logService.misc('[DeviceOperation] Device BLE address: ', convertBleAddressArrayToString(deviceBleAddress));
+        const leftHalfAddress = await leftHalf.getBleAddress();
+        this.logService.misc('[DeviceOperation] Left half BLE address: ', convertBleAddressArrayToString(leftHalfAddress));
+
+        this.logService.misc('[DeviceOperation] Device switching to pairing mode');
+        await this.device.switchToPairingMode();
+        this.logService.misc('[DeviceOperation] Left half switching to pairing mode');
+        await leftHalf.switchToPairingMode();
+
+        this.logService.misc('[DeviceOperation] Left half delete all bonds');
+        await leftHalf.deleteAllBonds();
+
+        this.logService.misc('[DeviceOperation] Device read pairing info');
+        const devicePairInfo = await this.device.getPairingInfo();
+        this.logService.misc('[DeviceOperation] Left half read pairing info');
+        const leftHalfPairInfo = await leftHalf.getPairingInfo();
+
+        this.logService.misc('[DeviceOperation] Left half set pairing info');
+        await leftHalf.setPairingInfo(PairIds.Right, devicePairInfo);
+        this.logService.misc('[DeviceOperation] Device set pairing info');
+        await this.device.setPairingInfo(PairIds.left, leftHalfPairInfo);
+
+        this.logService.misc('[DeviceOperation] Left half pair peripheral');
+        await leftHalf.pairPeripheral();
+        this.logService.misc('[DeviceOperation] Device pair central');
+        await this.device.pairCentral();
+
+        this.logService.misc('[DeviceOperation] Left half waiting for pairing finished');
+        let leftHalfParingStatus: PairingStatuses;
+        await waitUntil({
+            shouldWait: async () => {
+                leftHalfParingStatus = await leftHalf.getPairingStatus();
+
+                return leftHalfParingStatus === PairingStatuses.InProgress;
+            },
+            timeout: 15000,
+            timeoutErrorMessage: '[DeviceOperation] Left half pairing timeout',
+            wait: 100,
+        });
+        this.logService.misc(`[DeviceOperation] Left half pairing result: ${PAIRING_STATUS_TEXT[leftHalfParingStatus]}`);
+
+        this.logService.misc('[DeviceOperation] Device waiting for pairing finished');
+        let deviceParingStatus: PairingStatuses;
+        await waitUntil({
+            shouldWait: async () => {
+                deviceParingStatus = await this.device.getPairingStatus();
+
+                return deviceParingStatus === PairingStatuses.InProgress;
+            },
+            timeout: 15000,
+            timeoutErrorMessage: '[DeviceOperation] Device pairing timeout',
+            wait: 100,
+        });
+        this.logService.misc(`[DeviceOperation] Device pairing result: ${PAIRING_STATUS_TEXT[deviceParingStatus]}`);
+
+        this.logService.misc('[DeviceOperation] Device to Left half pairing finished');
+
+        return {
+            address: convertBleAddressArrayToString(deviceBleAddress),
+            pairAddress: convertBleAddressArrayToString(leftHalfAddress),
+        };
+    }
+
     public async setVariable(variable: UsbVariables, value: number): Promise<void> {
         this.logService.usb('[DeviceOperation] USB[T]: Set Variable');
         await this.device.write(Buffer.from([UsbCommand.SetVariable, variable, value]));
