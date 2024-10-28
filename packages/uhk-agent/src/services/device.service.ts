@@ -742,7 +742,7 @@ export class DeviceService {
             try {
                 leftHalfDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, leftHalfHid);
                 const result = await this.operations.pairToLeftHalf(leftHalfDevice);
-                this.logService.misc('[DeviceService] Left half pairing success');
+                this.logService.misc('[DeviceService] Pairing the keyboard halves succeeded.');
                 await snooze(1000);
                 event.sender.send(IpcEvents.device.leftHalfPairingSuccess, result.pairAddress);
             }
