@@ -695,7 +695,7 @@ export class UhkOperations {
         this.logService.misc('[DeviceOperation] Dongle switching to pairing mode');
         await dongle.switchToPairingMode();
 
-        this.logService.misc('[DeviceOperation] Device delete all bonds');
+        this.logService.misc('[DeviceOperation] Device delete dongle bond');
         await this.device.deleteBond(dongleBleAddress);
         this.logService.misc('[DeviceOperation] Dongle delete all bonds');
         await dongle.deleteAllBonds();
@@ -762,6 +762,8 @@ export class UhkOperations {
         this.logService.misc('[DeviceOperation] Left half switching to pairing mode');
         await leftHalf.switchToPairingMode();
 
+        this.logService.misc('[DeviceOperation] Device delete left half bond');
+        await this.device.deleteBond(leftHalfAddress);
         this.logService.misc('[DeviceOperation] Left half delete all bonds');
         await leftHalf.deleteAllBonds();
 

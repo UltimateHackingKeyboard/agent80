@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="form-check mt-3">
+                <div *ngIf="isHalvesPairingAllowed" class="form-check mt-3">
                     <button class="btn btn-default"
                             [disabled]="state.isLeftHalfPairing"
                             (click)="startLeftHalfPairing()"
