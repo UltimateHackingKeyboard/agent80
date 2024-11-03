@@ -301,8 +301,8 @@ export const getMissingDeviceState = (state: State): MissingDeviceState => {
     if (!state.connectedDevice) {
         if (state.bleDeviceConnected) {
             return {
-                header: 'UHK80 Detected via Bluetooth',
-                subtitle: 'Disconnect the Bluetooth and connect the UHK right half via USB cable!'
+                header: 'UHK 80 connected via BLE',
+                subtitle: 'Disconnect BLE and connect your UHK via its right USB port!'
             };
         }
 
@@ -315,8 +315,8 @@ export const getMissingDeviceState = (state: State): MissingDeviceState => {
 
         if (state.leftHalfDetected) {
             return {
-                header: 'UHK80 left half detected',
-                subtitle: ' Please disconnect it and first connect the right half to the computer!'
+                header: 'UHK 80 left half connected',
+                subtitle: 'Please connect the right half instead!'
             };
         }
     }
@@ -329,6 +329,7 @@ export const getMissingDeviceState = (state: State): MissingDeviceState => {
     }
 
     return {
+        description: 'If you have a UHK 80, connect its right half via USB, and ensure it\'s not connected to a dongle or BLE host!',
         header: 'Cannot find your UHK',
         subtitle: 'Please plug it in!'
     };
