@@ -713,11 +713,14 @@ export class DeviceService {
 
         try {
             await this.stopPollUhkDevice();
-            const dongleHid = await getCurrentUhkDongleHID();
             let dongleUhkDevice: UhkHidDevice;
             try {
-                dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
-                await dongleUhkDevice.deleteAllBonds();
+                if (isConnectedDongleAddress) {
+                    const dongleHid = await getCurrentUhkDongleHID();
+                    dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
+                    await dongleUhkDevice.deleteAllBonds();
+                }
+
                 await this.device.deleteBond(convertBleStringToNumberArray(address));
                 this.logService.misc('[DeviceService] delete host connection success', { address });
                 await snooze(1000);
