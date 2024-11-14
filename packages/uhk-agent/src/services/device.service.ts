@@ -717,8 +717,10 @@ export class DeviceService {
             try {
                 if (isConnectedDongleAddress) {
                     const dongleHid = await getCurrentUhkDongleHID();
-                    dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
-                    await dongleUhkDevice.deleteAllBonds();
+                    if (dongleHid) {
+                        dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
+                        await dongleUhkDevice.deleteAllBonds();
+                    }
                 }
 
                 await this.device.deleteBond(convertBleStringToNumberArray(address));
