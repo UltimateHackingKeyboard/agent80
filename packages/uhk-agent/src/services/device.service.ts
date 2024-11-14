@@ -752,6 +752,10 @@ export class DeviceService {
         try {
             await this.stopPollUhkDevice();
             const dongleHid = await getCurrentUhkDongleHID();
+            if (!dongleHid) {
+                throw new Error('Cannot find dongle!');
+            }
+
             let dongleUhkDevice: UhkHidDevice;
             try {
                 dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
@@ -1063,6 +1067,12 @@ export class DeviceService {
         try {
             await snooze(1000);
             const uhkDeviceProduct = await getCurrentUhkDongleHID();
+
+            if (uhkDeviceProduct) {
+                this.logService.misc('[DeviceService] Dongle not found, skip reenumeration');
+                return;
+            }
+
             uhkHidDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, uhkDeviceProduct);
             await uhkHidDevice.reenumerate({
                 device: UHK_DONGLE,
