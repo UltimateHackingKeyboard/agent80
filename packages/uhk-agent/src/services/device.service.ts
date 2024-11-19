@@ -708,35 +708,16 @@ export class DeviceService {
     }
 
     public async deleteHostConnection(event: Electron.IpcMainEvent, args: Array<any>): Promise<void> {
-        const {isConnectedDongleAddress, index, address} = args[0];
-        this.logService.misc('[DeviceService] delete host connection', { isConnectedDongleAddress, index, address });
+        const {index, address} = args[0];
+        this.logService.misc('[DeviceService] delete host connection', { index, address });
 
         try {
             await this.stopPollUhkDevice();
-            let dongleUhkDevice: UhkHidDevice;
-            try {
-                if (isConnectedDongleAddress) {
-                    const dongleHid = await getCurrentUhkDongleHID();
-                    if (dongleHid) {
-                        dongleUhkDevice = new UhkHidDevice(this.logService, this.options, this.rootDir, dongleHid);
-                        await dongleUhkDevice.deleteAllBonds();
-                    }
-                }
-
-                await this.device.deleteBond(convertBleStringToNumberArray(address));
-                this.logService.misc('[DeviceService] delete host connection success', { address });
-                await snooze(1000);
-                event.sender.send(IpcEvents.device.deleteHostConnectionSuccess, {index, address});
-            }
-            finally {
-                if (dongleUhkDevice) {
-                    dongleUhkDevice.close();
-                }
-            }
+            await this.device.deleteBond(convertBleStringToNumberArray(address));
+            this.logService.misc('[DeviceService] delete host connection success', { address });
+            await snooze(1000);
+            event.sender.send(IpcEvents.device.deleteHostConnectionSuccess, {index, address});
         } catch (error) {
-            if (isConnectedDongleAddress) {
-                await this.forceReenumerateDongle();
-            }
             await this.forceReenumerateDevice();
             this.logService.misc('[DeviceService] delete host connection failed', { address, error });
             event.sender.send(IpcEvents.device.deleteHostConnectionFailed, error.message);

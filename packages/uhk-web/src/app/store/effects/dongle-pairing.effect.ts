@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType} from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { map, tap, withLatestFrom } from 'rxjs/operators';
-import { HostConnections } from 'uhk-common';
+import { map, tap } from 'rxjs/operators';
 import { NotificationType, runInElectron } from 'uhk-common';
 
 import { DeviceRendererService } from '../../services/device-renderer.service';
@@ -16,7 +14,6 @@ import {
     DonglePairingFailedAction,
     DonglePairingSuccessAction,
 } from '../actions/dongle-pairing.action';
-import { AppState, getDongle } from '../index';
 
 @Injectable()
 export class DonglePairingEffect {
@@ -24,11 +21,9 @@ export class DonglePairingEffect {
     deleteHostConnection$ = createEffect(() => this.actions$
         .pipe(
             ofType<DeleteHostConnectionAction>(ActionTypes.DeleteHostConnection),
-            withLatestFrom(this.store.select(getDongle)),
-            map(([action, dongle ]) => {
+            map((action ) => {
                 if (runInElectron()) {
-                    const isConnectedDongleAddress = action.payload.hostConnection.type === HostConnections.Dongle && dongle?.bleAddress === action.payload.hostConnection.address;
-                    this.deviceRendererService.deleteHostConnection(action.payload, isConnectedDongleAddress);
+                    this.deviceRendererService.deleteHostConnection(action.payload);
                     return new EmptyAction();
                 } else {
                     return new DeleteHostConnectionSuccessAction({
@@ -87,6 +82,5 @@ export class DonglePairingEffect {
 
     constructor(private actions$: Actions,
                 private deviceRendererService: DeviceRendererService,
-                private store: Store<AppState>,
     ){}
 }
