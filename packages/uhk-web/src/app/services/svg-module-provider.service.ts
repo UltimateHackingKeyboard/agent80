@@ -115,7 +115,11 @@ export class SvgModuleProviderService implements OnDestroy {
         return this.separator;
     }
 
-    getViewBox(): string {
+    getViewBox(halvesInfo: HalvesInfo): string {
+        if (this.connectedDeviceId === UHK_80_DEVICE.id && halvesInfo.areHalvesMerged) {
+            return '-520 670 1250 600';
+        }
+
         return this.viewBox;
     }
 

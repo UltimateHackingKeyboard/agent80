@@ -14,6 +14,7 @@ import { animate, state, trigger, style, transition } from '@angular/animations'
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import {
     BacklightingMode,
+    getDefaultHalvesInfo,
     HalvesInfo,
     KeyAction,
     KeyboardLayout,
@@ -134,7 +135,7 @@ export class SvgKeyboardComponent implements AfterViewInit, OnInit, OnChanges {
                 private sanitizer: DomSanitizer,
                 private cdRef: ChangeDetectorRef) {
         this.modules = [];
-        this.viewBox = this.svgModuleProvider.getViewBox();
+        this.viewBox = this.svgModuleProvider.getViewBox(getDefaultHalvesInfo());
         this.modulesState = {};
         this.halvesInfo = {
             areHalvesMerged: true,
@@ -293,7 +294,7 @@ export class SvgKeyboardComponent implements AfterViewInit, OnInit, OnChanges {
 
     private setModules() {
         this.descriptionAnimationParams = this.svgModuleProvider.getDescriptionAnimationParams();
-        this.viewBox = this.svgModuleProvider.getViewBox();
+        this.viewBox = this.svgModuleProvider.getViewBox(this.halvesInfo);
         this.modules = this.svgModuleProvider.getSvgModules(this.keyboardLayout, this.halvesInfo);
         this.separator = this.svgModuleProvider.getSvgSeparator();
         this.separatorStyle = this.sanitizer.bypassSecurityTrustStyle(this.separator.style);
