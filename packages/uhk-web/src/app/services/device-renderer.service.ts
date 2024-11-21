@@ -69,8 +69,9 @@ export class DeviceRendererService {
         this.ipcRenderer.send(IpcEvents.device.changeKeyboardLayout, layout, hardwareConfiguration.toJsonObject());
     }
 
-    deleteHostConnection(data: DeleteHostConnectionPayload): void {
+    deleteHostConnection(data: DeleteHostConnectionPayload, isConnectedDongleAddress: boolean): void {
         this.ipcRenderer.send(IpcEvents.device.deleteHostConnection, {
+            isConnectedDongleAddress,
             index: data.index,
             address: data.hostConnection.address,
         });
